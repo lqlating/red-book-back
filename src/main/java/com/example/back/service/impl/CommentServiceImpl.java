@@ -2,7 +2,9 @@ package com.example.back.service.impl;
 
 import com.example.back.mapper.CommentMapper;
 import com.example.back.pojo.Comment;
+import com.example.back.pojo.User;
 import com.example.back.service.CommentService;
+import com.example.back.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,40 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentMapper commentMapper;
 
+    @Autowired
+    private UserService userService; // 注入 UserService
 
     @Override
-    public List<Comment> getComment(Integer article_id) {
-        return commentMapper.getComment(article_id);
+    public List<Comment> getCommentBylikeCount(Integer article_id) {
+        return commentMapper.getCommentBylikeCount(article_id);
+    }
+
+    @Override
+    public List<Comment> getCommentByTime(Integer article_id) {
+        return commentMapper.getCommentByTime(article_id);
+    }
+
+    @Override
+    public int getReplyCountByCommentId(Integer commentId) {
+        return commentMapper.getReplyCountByCommentId(commentId);
+    }
+
+    @Override
+    public List<Comment> getCommentsByParentId(Integer parentId) {
+        return commentMapper.getCommentsByParentId(parentId);
+    }
+
+    @Override
+    public int getCommentCountByParentId(Integer parentId) {
+        return commentMapper.getCommentCountByParentId(parentId);
+    }
+
+    @Override
+    public List<User> findUserByCommentId(Integer commentId) {
+        Integer userId = commentMapper.findUserIdByCommentId(commentId);
+        if (userId != null) {
+            return userService.search(userId);
+        }
+        return null;
     }
 }
