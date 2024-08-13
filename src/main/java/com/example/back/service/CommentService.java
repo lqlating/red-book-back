@@ -1,6 +1,7 @@
 package com.example.back.service;
 
 import com.example.back.pojo.Comment;
+import com.example.back.pojo.Result;
 import com.example.back.pojo.User;
 import org.springframework.stereotype.Service;
 
@@ -19,4 +20,11 @@ public interface CommentService {
     int getCommentCountByParentId(Integer parentId);
 
     List<User> findUserByCommentId(Integer commentId);
+
+    Result addComment(Comment comment);
+
+    List<Comment> getCommentsByUserId(Integer userId);
+
+    // 根据 comment_id 查找评论
+    List<Comment> findCommentByCommentId(Integer commentId);
 }

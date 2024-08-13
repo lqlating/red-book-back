@@ -17,4 +17,6 @@ public interface ArticleService {
     void addStar(Integer articleID);
 
     void subStar(Integer articleID);
+
+    Article getArticleById(Integer articleId);
 }

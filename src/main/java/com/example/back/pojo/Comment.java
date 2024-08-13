@@ -15,5 +15,6 @@ public class Comment {
     private  Integer parent_id;
     private  Integer like_count;
     private String publish_time;
+    private Integer star_count;
 
 }

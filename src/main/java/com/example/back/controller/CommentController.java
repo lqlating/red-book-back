@@ -5,10 +5,10 @@ import com.example.back.pojo.Result;
 import com.example.back.pojo.User;
 import com.example.back.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -54,5 +54,32 @@ public class CommentController {
     public Result getUserByCommentId(@PathVariable Integer commentId) {
         List<User> userList = commentService.findUserByCommentId(commentId);
         return Result.success(userList);
+    }
+
+    @PostMapping("/addComment")
+    public Result addComment(@RequestBody Comment comment) {
+        // 设置初始值
+        comment.setLike_count(0);
+        comment.setStar_count(0);
+        comment.setPublish_time(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+        return commentService.addComment(comment);
+    }
+
+    @GetMapping("/getCommentsByUserId/{userId}")
+    public Result getCommentsByUserId(@PathVariable Integer userId) {
+        System.out.println("get comments by userId successfully");
+        List<Comment> commentList = commentService.getCommentsByUserId(userId);
+        return Result.success(commentList);
+    }
+
+    // 根据评论ID查询评论
+    @GetMapping("/byCommentId/{commentId}")
+    public Result findCommentsByCommentId(@PathVariable Integer commentId) {
+        List<Comment> commentList = commentService.findCommentByCommentId(commentId);
+        if (commentList.isEmpty()) {
+            return Result.error("No comments found for the specified comment ID.");
+        }
+        return Result.success(commentList);
     }
 }

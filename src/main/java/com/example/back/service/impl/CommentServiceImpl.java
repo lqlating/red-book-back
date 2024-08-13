@@ -2,6 +2,7 @@ package com.example.back.service.impl;
 
 import com.example.back.mapper.CommentMapper;
 import com.example.back.pojo.Comment;
+import com.example.back.pojo.Result;
 import com.example.back.pojo.User;
 import com.example.back.service.CommentService;
 import com.example.back.service.UserService;
@@ -50,5 +51,31 @@ public class CommentServiceImpl implements CommentService {
             return userService.search(userId);
         }
         return null;
+    }
+
+    @Override
+    public Result addComment(Comment comment) {
+        try {
+            // 插入评论并获取插入行数
+            int rows = commentMapper.insertComment(comment);
+            if (rows > 0) {
+                return Result.success();
+            } else {
+                return Result.error("评论添加失败");
+            }
+        } catch (Exception e) {
+            return Result.error("评论添加失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Comment> getCommentsByUserId(Integer userId) {
+        return commentMapper.findCommentsByUserId(userId);
+    }
+
+    // 根据 comment_id 查找评论
+    @Override
+    public List<Comment> findCommentByCommentId(Integer commentId) {
+        return commentMapper.findCommentByCommentId(commentId);
     }
 }

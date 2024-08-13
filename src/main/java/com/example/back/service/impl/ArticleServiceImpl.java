@@ -37,4 +37,8 @@ public class ArticleServiceImpl implements ArticleService {
         articleMapper.subStar(articleID);
     }
 
+    @Override
+    public Article getArticleById(Integer articleId) {
+        return articleMapper.getArticleById(articleId);
+    }
 }

@@ -44,11 +44,21 @@ public class ArticleController {
     }
 
     @PostMapping("/subStar/{articleID}")
-    public  void subStar(@PathVariable Integer articleID){
+    public void subStar(@PathVariable Integer articleID){
         System.out.println("sub star");
         articleService.subStar(articleID);
     }
 
+    //根据article_id查询文章
+    @GetMapping("/getArticleById/{article_id}")
+    public Result getArticleById(@PathVariable Integer article_id) {
+        Article article = articleService.getArticleById(article_id);
+        if (article != null) {
+            return Result.success(article);
+        } else {
+            return Result.error("Article not found");
+        }
+    }
 
 
 }

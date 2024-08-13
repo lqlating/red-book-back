@@ -2,6 +2,7 @@ package com.example.back.mapper;
 
 import com.example.back.pojo.Article;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -34,4 +35,8 @@ public interface ArticleMapper {
             "SET star_count = star_count - 1\n" +
             "WHERE article_id = #{article_id};\n")
     void subStar(Integer articleID);
+
+    //根据id查询文章
+    @Select("SELECT * FROM article WHERE article_id = #{articleId}")
+    Article getArticleById(Integer articleId);
 }
