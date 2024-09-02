@@ -63,9 +63,17 @@ public interface CommentMapper {
     @Insert("INSERT INTO comment (content, article_id, user_id, like_count, publish_time, star_count, parent_id) VALUES (#{content}, #{article_id}, #{user_id}, #{like_count}, #{publish_time}, #{star_count}, #{parent_id})")
     int insertComment(Comment comment);
 
-    //根据userid查找评论
-    @Select("SELECT * FROM comment WHERE parent_id IN (SELECT comment_id FROM comment WHERE user_id = #{userId})")
+    //查询回复自己的评论
+    @Select("SELECT * FROM comment " +
+            "WHERE parent_id IN (" +
+            "    SELECT comment_id " +
+            "    FROM comment " +
+            "    WHERE user_id = #{userId}" +
+            ") " +
+            "AND user_id <> #{userId} " +
+            "ORDER BY publish_time DESC")
     List<Comment> findCommentsByUserId(@Param("userId") Integer userId);
+
 
 
     // 根据 comment_id 查找评论

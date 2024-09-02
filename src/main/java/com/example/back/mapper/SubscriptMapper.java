@@ -16,4 +16,7 @@ public interface SubscriptMapper {
     // 新增删除订阅的方法
     @Delete("DELETE FROM subscript WHERE user_id = #{userId} AND target_id = #{targetId}")
     int deleteSubscript(@Param("userId") int userId, @Param("targetId") int targetId);
+
+    @Select("SELECT user_id FROM subscript WHERE target_id = #{targetId}")
+    List<Integer> findUserIdsByTargetId(Integer targetId);
 }

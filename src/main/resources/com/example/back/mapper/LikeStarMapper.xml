@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.back.mapper.LikeStarMapper">
+
+
+    <insert id="insertOperation">
+        INSERT INTO like_star (user_id, target_id, content_type, operation_type)
+        VALUES (#{user_id}, #{target_id}, #{content_type}, #{operation_type})
+    </insert>
+
+    <delete id="deleteOperation">
+        DELETE FROM like_star
+        WHERE user_id = #{user_id}
+          AND target_id = #{target_id}
+          AND content_type = #{content_type}
+          AND operation_type = #{operation_type}
+    </delete>
+
+    <select id="searchList" resultType="com.example.back.pojo.LikeStar">
+        SELECT * FROM like_star
+        WHERE user_id = #{user_id}
+        <if test="content_type != null">
+            AND content_type = #{content_type}
+        </if>
+        <if test="operation_type != null">
+            AND operation_type = #{operation_type}
+        </if>
+    </select>
+
+    <select id="searchCount" resultType="com.example.back.pojo.LikeStar">
+        SELECT * FROM like_star
+        WHERE 1=1
+        <if test="user_id != null">
+            AND user_id = #{user_id}
+        </if>
+        <if test="comment_id != null">
+            AND target_id = #{comment_id}
+            AND content_type = 'comment'
+        </if>
+        <if test="comment_id == null and article_id != null">
+            AND target_id = #{article_id}
+            AND content_type = 'article'
+        </if>
+        <if test="operation_type != null">
+            AND operation_type = #{operation_type}
+        </if>
+    </select>
+
+</mapper>

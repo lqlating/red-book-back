@@ -1,5 +1,6 @@
 package com.example.back.service;
 
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface SubscriptService {
 
     // 新增删除订阅的方法
     boolean deleteSubscript(int userId, int targetId);
+
+    List<Integer> getUserIdsByTargetId(Integer targetId);
 }

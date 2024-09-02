@@ -12,6 +12,7 @@ public class SubscriptController {
     @Autowired
     private SubscriptService subscriptService;
 
+    //关注
     @PostMapping("/addSubscription")
     public Result addSubscription(@RequestParam("userId") Integer userId, @RequestParam("targetId") Integer targetId) {
         try {
@@ -30,6 +31,7 @@ public class SubscriptController {
     }
 
 
+    //取消关注
     @DeleteMapping("/deleteSubscript/{userId}/{targetId}")
     public Result deleteSubscript(@PathVariable("userId") int userId, @PathVariable("targetId") int targetId) {
         boolean isDeleted = subscriptService.deleteSubscript(userId, targetId);
@@ -39,4 +41,17 @@ public class SubscriptController {
             return Result.error("删除订阅失败");
         }
     }
+
+    // 查询所有的 user_id，根据 target_id
+    @GetMapping("/getUserIdsByTargetId/{targetId}")
+    public Result getUserIdsByTargetId(@PathVariable Integer targetId) {
+        try {
+            List<Integer> userIds = subscriptService.getUserIdsByTargetId(targetId);
+            return Result.success(userIds);
+        } catch (Exception e) {
+            return Result.error("Failed to fetch user IDs: " + e.getMessage());
+        }
+    }
+
+
 }

@@ -26,4 +26,9 @@ public class SubscriptServiceImpl implements SubscriptService {
     public boolean deleteSubscript(int userId, int targetId) {
         return subscriptMapper.deleteSubscript(userId, targetId) > 0;
     }
+
+    @Override
+    public List<Integer> getUserIdsByTargetId(Integer targetId) {
+        return subscriptMapper.findUserIdsByTargetId(targetId);
+    }
 }
