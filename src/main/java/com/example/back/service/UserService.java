@@ -20,4 +20,6 @@ public interface UserService {
     void update(User user);
 
     User verify(String password,String account);
+
+    List<User> searchByUsername(String username);
 }

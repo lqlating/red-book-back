@@ -39,4 +39,8 @@ public interface ArticleMapper {
     //根据id查询文章
     @Select("SELECT * FROM article WHERE article_id = #{articleId}")
     Article getArticleById(Integer articleId);
+
+    //根据输入内容查询文章
+    @Select("SELECT * FROM article WHERE title LIKE CONCAT('%', #{keyword}, '%') OR content LIKE CONCAT('%', #{keyword}, '%')")
+    List<Article> searchByTitleOrContent(@Param("keyword") String keyword);
 }

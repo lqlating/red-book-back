@@ -23,4 +23,7 @@ public interface UserMapper {
 
 
     User verify(String password,String account);
+
+    @Select("SELECT * FROM user_info WHERE username LIKE CONCAT('%', #{username}, '%')")
+    List<User> searchByUsername(@Param("username") String username);
 }

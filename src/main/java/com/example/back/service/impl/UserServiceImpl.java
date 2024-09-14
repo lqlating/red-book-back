@@ -41,4 +41,9 @@ public class UserServiceImpl implements UserService {
         return userMapper.verify(password,account);
     }
 
+    @Override
+    public List<User> searchByUsername(String username) {
+        return userMapper.searchByUsername(username);
+    }
+
 }

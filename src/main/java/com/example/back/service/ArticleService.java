@@ -19,4 +19,6 @@ public interface ArticleService {
     void subStar(Integer articleID);
 
     Article getArticleById(Integer articleId);
+
+    List<Article> searchByTitleOrContent(String keyword);
 }

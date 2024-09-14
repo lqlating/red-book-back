@@ -40,6 +40,12 @@ public class UserController {
         return Result.success();
     }
 
+    //根据用户名查找用户
+    @GetMapping("/SearchUserByUsername")
+    public Result searchByUsername(@RequestParam String username) {
+        List<User> userList = userService.searchByUsername(username);
+        return Result.success(userList);
+    }
 
     @PostMapping("/login")
     public Result verify(@RequestBody LoginRequest loginRequest){

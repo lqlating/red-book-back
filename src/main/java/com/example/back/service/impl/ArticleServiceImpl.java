@@ -41,4 +41,9 @@ public class ArticleServiceImpl implements ArticleService {
     public Article getArticleById(Integer articleId) {
         return articleMapper.getArticleById(articleId);
     }
+
+    @Override
+    public List<Article> searchByTitleOrContent(String keyword) {
+        return articleMapper.searchByTitleOrContent(keyword);
+    }
 }
