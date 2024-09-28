@@ -16,4 +16,9 @@ public interface SubscriptService {
     boolean deleteSubscript(int userId, int targetId);
 
     List<Integer> getUserIdsByTargetId(Integer targetId);
+
+    int countSubscriptionsByTargetId(Integer userId);
+
+    // 新增方法：查询 user_id 等于传入的 userId 的数据条数
+    int countSubscriptionsByUserId(Integer userId);
 }

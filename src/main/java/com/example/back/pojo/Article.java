@@ -16,5 +16,5 @@ public class Article {
     private  String title;
     private String publication_time;
     private String address;
-    private String star_count;
+    private Integer star_count;
 }

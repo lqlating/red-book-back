@@ -57,11 +57,9 @@ public class LikeStarController {
         return result > 0 ? Result.success() : Result.error("Failed to delete " + request.getOperation_type());
     }
 
-
     // 查询点赞或收藏
     @PostMapping("/search")
     public Result searchListOperation(@RequestBody SearchRequest request) {
-        // 使用传入的三个参数进行查询
         List<LikeStar> results = likeStarService.searchList(
                 request.getUser_id(),
                 request.getContent_type(),
@@ -80,5 +78,17 @@ public class LikeStarController {
                 request.getOperation_type()
         );
         return results != null && !results.isEmpty() ? Result.success(results) : Result.error("No data found");
+    }
+
+    // 新增接口：根据 target_id 数组查询数据条数
+    @PostMapping("/countByTargetIds")
+    public Result countByTargetIds(@RequestBody List<Integer> targetIds) {
+        int totalCount = 0;
+
+        for (Integer targetId : targetIds) {
+            totalCount += likeStarService.countByTargetId(targetId);
+        }
+
+        return Result.success(totalCount);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.back.service;
 
 import com.example.back.pojo.Article;
+import com.example.back.pojo.ArticleRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,12 @@ public interface ArticleService {
 
     void subStar(Integer articleID);
 
-    Article getArticleById(Integer articleId);
+    List<Article> getArticlesByIds(List<Integer> articleIds);
+
 
     List<Article> searchByTitleOrContent(String keyword);
+
+    List<Article> getArticlesByAuthorId(Integer authorId);
+
+    void save(ArticleRequest article);
 }

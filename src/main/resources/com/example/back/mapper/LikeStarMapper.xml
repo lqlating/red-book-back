@@ -49,4 +49,9 @@
         </if>
     </select>
 
+    <select id="countByTargetId" resultType="int">
+        SELECT COUNT(*) FROM like_star
+        WHERE target_id = #{target_id}
+    </select>
+
 </mapper>

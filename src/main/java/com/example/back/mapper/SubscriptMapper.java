@@ -13,10 +13,18 @@ public interface SubscriptMapper {
     @Select("SELECT target_id FROM subscript WHERE user_id = #{userId}")
     List<Integer> findTargetIdsByUserId(@Param("userId") Integer userId);
 
-    // 新增删除订阅的方法
+    // 删除订阅
     @Delete("DELETE FROM subscript WHERE user_id = #{userId} AND target_id = #{targetId}")
     int deleteSubscript(@Param("userId") int userId, @Param("targetId") int targetId);
 
     @Select("SELECT user_id FROM subscript WHERE target_id = #{targetId}")
-    List<Integer> findUserIdsByTargetId(Integer targetId);
+    List<Integer> findUserIdsByTargetId(@Param("targetId") Integer targetId);
+
+    // 查询 target_id 等于 userId 的数据条数
+    @Select("SELECT COUNT(*) FROM subscript WHERE target_id = #{userId}")
+    int countSubscriptionsByTargetId(@Param("userId") Integer userId);
+
+    // 新增查询 user_id 等于传入 userId 的数据条数
+    @Select("SELECT COUNT(*) FROM subscript WHERE user_id = #{userId}")
+    int countSubscriptionsByUserId(@Param("userId") Integer userId);
 }

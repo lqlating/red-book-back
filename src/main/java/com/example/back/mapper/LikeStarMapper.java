@@ -29,4 +29,7 @@ public interface LikeStarMapper {
                                @Param("comment_id") Integer comment_id,
                                @Param("article_id") Integer article_id,
                                @Param("operation_type") String operation_type);
+
+    // 新增根据 target_id 查询数据条数的方法
+    int countByTargetId(@Param("target_id") Integer target_id);
 }

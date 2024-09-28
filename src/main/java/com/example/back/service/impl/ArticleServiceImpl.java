@@ -1,6 +1,7 @@
 package com.example.back.service.impl;
 import com.example.back.mapper.ArticleMapper;
 import com.example.back.pojo.Article;
+import com.example.back.pojo.ArticleRequest;
 import com.example.back.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,12 +39,22 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Article getArticleById(Integer articleId) {
-        return articleMapper.getArticleById(articleId);
+    public List<Article> getArticlesByIds(List<Integer> articleIds) {
+        return articleMapper.selectArticlesByIds(articleIds);
     }
 
     @Override
     public List<Article> searchByTitleOrContent(String keyword) {
         return articleMapper.searchByTitleOrContent(keyword);
+    }
+
+    @Override
+    public List<Article> getArticlesByAuthorId(Integer authorId) {
+        return articleMapper.findArticlesByAuthorId(authorId);
+    }
+
+    @Override
+    public void save(ArticleRequest article) {
+        articleMapper.insert(article);
     }
 }

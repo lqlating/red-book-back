@@ -1,6 +1,7 @@
 package com.example.back.controller;
 
 import com.example.back.pojo.Article;
+import com.example.back.pojo.ArticleRequest;
 import com.example.back.pojo.Result;
 import com.example.back.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +12,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @RestController
 public class ArticleController {
@@ -62,21 +66,14 @@ public class ArticleController {
         articleService.subStar(articleID);
     }
 
-    @Operation(summary = "Get article by ID", description = "Retrieves an article by its unique ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Article retrieved successfully",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Article.class)) }),
-            @ApiResponse(responseCode = "404", description = "Article not found",
-                    content = @Content)
-    })
-    @GetMapping("/getArticleById/{article_id}")
-    public Result getArticleById(@PathVariable Integer article_id) {
-        Article article = articleService.getArticleById(article_id);
-        if (article != null) {
-            return Result.success(article);
+   
+    @PostMapping("/getArticlesByIds")
+    public Result getArticlesByIds(@RequestBody List<Integer> articleIds) {
+        List<Article> articles = articleService.getArticlesByIds(articleIds);
+        if (!articles.isEmpty()) {
+            return Result.success(articles);
         } else {
-            return Result.error("Article not found");
+            return Result.error("Articles not found");
         }
     }
 
@@ -85,5 +82,35 @@ public class ArticleController {
     public Result searchByTitleOrContent(@RequestParam String keyword) {
         List<Article> articles = articleService.searchByTitleOrContent(keyword);
         return Result.success(articles);
+    }
+    
+
+    @GetMapping("/getArticlesByAuthorId/{authorId}")
+    public Result getArticlesByAuthorId(@PathVariable Integer authorId) {
+        List<Article> articles = articleService.getArticlesByAuthorId(authorId);
+        if (!articles.isEmpty()) {
+            return Result.success(articles);
+        } else {
+            return Result.error("Articles not found");
+        }
+    }
+
+    @Operation(summary = "Add a new article", description = "Inserts a new article into the database")
+    @PostMapping("/add")
+    public Result addArticle(@RequestBody ArticleRequest article) {
+        // 设置默认值
+        article.setLikeCount(0);
+        article.setStarCount(0);
+        article.setPublicationTime(LocalDate.now().toString()); // 获取当前日期
+        article.setAddress(getRandomAddress()); // 获取随机地址
+
+        articleService.save(article);
+        return Result.success("Article added successfully");
+    }
+
+    private String getRandomAddress() {
+        String[] provinces = {"北京", "上海", "广东", "江苏", "浙江", "四川", "陕西", "山东", "湖北", "湖南"};
+        Random random = new Random();
+        return provinces[random.nextInt(provinces.length)];
     }
 }

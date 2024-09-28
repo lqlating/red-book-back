@@ -53,5 +53,21 @@ public class SubscriptController {
         }
     }
 
+    @GetMapping("/countSubscriptionsByTargetId/{userId}")
+    public Result countSubscriptionsByTargetId(@PathVariable Integer userId) {
+        try {
+            int count = subscriptService.countSubscriptionsByTargetId(userId);
+            return Result.success(count);
+        } catch (Exception e) {
+            return Result.error("Failed to count subscriptions: " + e.getMessage());
+        }
+    }
+
+    // 新增接口：查询 user_id 等于传入的 userId 的数据条数
+    @GetMapping("/countSubscriptionsByUserId/{userId}")
+    public Result countSubscriptionsByUserId(@PathVariable Integer userId) {
+        int count = subscriptService.countSubscriptionsByUserId(userId);
+        return Result.success(count);
+    }
 
 }

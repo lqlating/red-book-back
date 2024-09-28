@@ -31,4 +31,15 @@ public class SubscriptServiceImpl implements SubscriptService {
     public List<Integer> getUserIdsByTargetId(Integer targetId) {
         return subscriptMapper.findUserIdsByTargetId(targetId);
     }
+
+    @Override
+    public int countSubscriptionsByTargetId(Integer userId) {
+        return subscriptMapper.countSubscriptionsByTargetId(userId);
+    }
+
+    // 新增查询 user_id 等于传入 userId 的数据条数
+    @Override
+    public int countSubscriptionsByUserId(Integer userId) {
+        return subscriptMapper.countSubscriptionsByUserId(userId);
+    }
 }
