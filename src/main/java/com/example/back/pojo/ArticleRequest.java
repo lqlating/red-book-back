@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleRequest {
+    private String img;
     private String imgUrl;
     private String txtType;
     private Integer authorId;
@@ -15,4 +16,6 @@ public class ArticleRequest {
     private Integer starCount;
     private String publicationTime;
     private String address;
+    private byte[] imgData;
+
 }

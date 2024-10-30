@@ -55,9 +55,10 @@ public interface ArticleMapper {
 
     // 插入文章的 SQL 语句
     // 插入文章的 SQL 语句
-    @Insert("INSERT INTO article (img_url, txt_type, content, title, like_count, publication_time, address, star_count,author_id) " +
-            "VALUES (#{imgUrl}, #{txtType}, #{content}, #{title}, #{likeCount}, #{publicationTime}, #{address}, #{starCount},#{authorId})")
+    @Insert("INSERT INTO article (img, img_url, txt_type, content, title, like_count, publication_time, address, star_count, author_id) " +
+            "VALUES (#{imgData}, #{imgUrl}, #{txtType}, #{content}, #{title}, #{likeCount}, #{publicationTime}, #{address}, #{starCount}, #{authorId})")
     void insert(ArticleRequest article);
+
 
 
 }

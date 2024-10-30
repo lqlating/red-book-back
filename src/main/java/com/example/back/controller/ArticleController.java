@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 @RestController
@@ -22,7 +22,7 @@ public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
-
+    
     @Operation(summary = "Filter content based on type", description = "Returns a list of articles filtered by type")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Articles retrieved successfully",
@@ -33,45 +33,58 @@ public class ArticleController {
     })
     @GetMapping("/FilterContent/{type}")
     public Result list(@PathVariable String type) {
-        System.out.println("recommend content");
         List<Article> articleList = articleService.list(type);
-        return Result.success(articleList);
+        // 对于每篇文章，将 BLOB 格式的图片转换为 Base64 格式的字符串
+        for (Article article : articleList) {
+            if (article.getImg() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(article.getImg());
+                article.setImg_url(base64Image);  // 设置 Base64 图片数据
+                article.setImg(null);  // 清空 BLOB 数据，避免返回
+            }
+        }
+
+        return Result.success(articleList);  // 返回带有 Base64 图片的文章列表
     }
 
     @Operation(summary = "Add like to an article", description = "Increases the like count for the specified article")
     @PostMapping("/addLike/{articleID}")
     public void addLike(@PathVariable Integer articleID) {
-        System.out.println("add like");
         articleService.addLike(articleID);
     }
 
     @Operation(summary = "Remove like from an article", description = "Decreases the like count for the specified article")
     @PostMapping("/subLike/{articleID}")
     public void subLike(@PathVariable Integer articleID) {
-        System.out.println("sub like");
         articleService.subLike(articleID);
     }
 
     @Operation(summary = "Add star to an article", description = "Increases the star count for the specified article")
     @PostMapping("/addStar/{articleID}")
     public void addStar(@PathVariable Integer articleID) {
-        System.out.println("add star");
         articleService.addStar(articleID);
     }
 
     @Operation(summary = "Remove star from an article", description = "Decreases the star count for the specified article")
     @PostMapping("/subStar/{articleID}")
     public void subStar(@PathVariable Integer articleID) {
-        System.out.println("sub star");
         articleService.subStar(articleID);
     }
 
-   
     @PostMapping("/getArticlesByIds")
     public Result getArticlesByIds(@RequestBody List<Integer> articleIds) {
         List<Article> articles = articleService.getArticlesByIds(articleIds);
+
+        // 将 BLOB 图片数据转换为 Base64 格式
+        for (Article article : articles) {
+            if (article.getImg() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(article.getImg());
+                article.setImg_url(base64Image);
+                article.setImg(null);  // 清空 BLOB 数据
+            }
+        }
+
         if (!articles.isEmpty()) {
-            return Result.success(articles);
+            return Result.success(articles);  // 返回 Base64 编码后的图片数据
         } else {
             return Result.error("Articles not found");
         }
@@ -81,13 +94,32 @@ public class ArticleController {
     @GetMapping("/SearchArticle")
     public Result searchByTitleOrContent(@RequestParam String keyword) {
         List<Article> articles = articleService.searchByTitleOrContent(keyword);
+
+        // 转换图片为 Base64
+        for (Article article : articles) {
+            if (article.getImg() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(article.getImg());
+                article.setImg_url(base64Image);
+                article.setImg(null);
+            }
+        }
+
         return Result.success(articles);
     }
-    
 
     @GetMapping("/getArticlesByAuthorId/{authorId}")
     public Result getArticlesByAuthorId(@PathVariable Integer authorId) {
         List<Article> articles = articleService.getArticlesByAuthorId(authorId);
+
+        // 转换图片为 Base64
+        for (Article article : articles) {
+            if (article.getImg() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(article.getImg());
+                article.setImg_url(base64Image);
+                article.setImg(null);
+            }
+        }
+
         if (!articles.isEmpty()) {
             return Result.success(articles);
         } else {
@@ -103,7 +135,12 @@ public class ArticleController {
         article.setStarCount(0);
         article.setPublicationTime(LocalDate.now().toString()); // 获取当前日期
         article.setAddress(getRandomAddress()); // 获取随机地址
-
+        // 将 Base64 图片转换为字节数组
+        if (article.getImg() != null) {
+            byte[] imageBytes = Base64.getDecoder().decode(article.getImg());
+            article.setImgData(imageBytes); // 设置为字节数组
+            article.setImg(null); // 清空 Base64 数据，避免冗余
+        }
         articleService.save(article);
         return Result.success("Article added successfully");
     }
