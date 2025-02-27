@@ -13,4 +13,7 @@ public interface BookService {
     void updateBook(Book book);
 
     void deleteBook(Integer bookId);
+
+    List<Book> getBooksByType(String bookType);
+
 }

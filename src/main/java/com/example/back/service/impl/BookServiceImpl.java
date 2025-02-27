@@ -37,4 +37,10 @@ public class BookServiceImpl implements BookService {
     public void deleteBook(Integer book_id) {
         bookMapper.deleteBook(book_id);
     }
+
+    @Override
+    public List<Book> getBooksByType(String book_type) {
+        return bookMapper.getBooksByType(book_type);
+    }
+
 }

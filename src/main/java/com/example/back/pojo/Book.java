@@ -14,4 +14,5 @@ public class Book {
     private Integer book_price;     // 对应数据库中的 book_price
     private String book_writer;     // 对应数据库中的 book_writer
     private String book_title;      // 对应数据库中的 book_title
+    private String book_type;
 }

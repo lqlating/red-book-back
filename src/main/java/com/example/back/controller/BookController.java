@@ -47,4 +47,11 @@ public class BookController {
         bookService.deleteBook(book_id);
         return Result.success();
     }
+
+    @GetMapping("/type/{book_type}")
+    public Result getBooksByType(@PathVariable String book_type) {
+        List<Book> books = bookService.getBooksByType(book_type);
+        return Result.success(books);
+    }
+
 }

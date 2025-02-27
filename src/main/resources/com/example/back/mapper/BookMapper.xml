@@ -33,4 +33,9 @@
         DELETE FROM book WHERE book_id = #{book_id}
     </delete>
 
+    <select id="getBooksByType" parameterType="String" resultType="com.example.back.pojo.Book">
+        SELECT * FROM book WHERE book_type = #{book_type}
+    </select>
+
+
 </mapper>
