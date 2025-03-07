@@ -72,4 +72,10 @@ public class BookController {
         return Result.success(books);
     }
 
+    // 新增接口定义
+    @GetMapping("/search")
+    public Result getBooksByTitle(@RequestParam String title) {
+        List<Book> books = bookService.getBooksByTitle(title);
+        return Result.success(books);
+    }
 }

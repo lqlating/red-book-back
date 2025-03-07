@@ -37,5 +37,15 @@
         SELECT * FROM book WHERE book_type = #{book_type}
     </select>
 
+    <!-- 新增 SQL 语句 -->
+    <select id="getBooksBySellerId" parameterType="String" resultType="com.example.back.pojo.Book">
+        SELECT *
+        FROM book
+        WHERE book_seller_id = #{book_seller_id}
+    </select>
 
+    <!-- 新增 SQL 语句 -->
+    <select id="getBooksByTitle" parameterType="String" resultType="com.example.back.pojo.Book">
+        SELECT * FROM book WHERE book_title LIKE CONCAT('%', #{title}, '%')
+    </select>
 </mapper>

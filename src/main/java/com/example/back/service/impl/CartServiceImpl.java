@@ -54,8 +54,4 @@ public class CartServiceImpl implements CartService {
         return cartMapper.getCartsByOwnerId(ownerId);
     }
 
-    @Override
-    public List<Cart> searchCartsByTitle(String title) {
-        return cartMapper.searchCartsByTitle(title);
-    }
 }

@@ -11,35 +11,38 @@
         <association property="book" javaType="com.example.back.pojo.Book">
             <id property="book_id" column="book_id"/>
             <result property="book_title" column="book_title"/>
+            <result property="book_img" column="book_img"/>
+            <result property="book_seller_id" column="book_seller_id"/>
+            <result property="book_price" column="book_price"/>
+            <result property="book_writer" column="book_writer"/>
+            <result property="book_type" column="book_type"/>
+            <result property="book_img_base64" column="book_img_base64"/>
         </association>
     </resultMap>
 
     <select id="listCarts" resultMap="CartResultMap">
-        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title
+        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title, book.book_img, book.book_seller_id, book.book_price, book.book_writer, book.book_type, 
+               CASE WHEN book.book_img IS NOT NULL THEN TO_BASE64(book.book_img) ELSE NULL END AS book_img_base64
         FROM cart
         JOIN book ON cart.book_id = book.book_id
     </select>
 
     <select id="getCartById" parameterType="Integer" resultMap="CartResultMap">
-        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title
+        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title, book.book_img, book.book_seller_id, book.book_price, book.book_writer, book.book_type, 
+               CASE WHEN book.book_img IS NOT NULL THEN TO_BASE64(book.book_img) ELSE NULL END AS book_img_base64
         FROM cart
         JOIN book ON cart.book_id = book.book_id
         WHERE cart.cart_id = #{cart_id}
     </select>
 
     <select id="getCartsByOwnerId" parameterType="Integer" resultMap="CartResultMap">
-        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title
+        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title, book.book_img, book.book_seller_id, book.book_price, book.book_writer, book.book_type, 
+               CASE WHEN book.book_img IS NOT NULL THEN TO_BASE64(book.book_img) ELSE NULL END AS book_img_base64
         FROM cart
         JOIN book ON cart.book_id = book.book_id
         WHERE cart.owner_id = #{owner_id}
     </select>
 
-    <select id="searchCartsByTitle" parameterType="String" resultMap="CartResultMap">
-        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title
-        FROM cart
-        JOIN book ON cart.book_id = book.book_id
-        WHERE book.book_title LIKE CONCAT('%', #{title}, '%')
-    </select>
 
     <insert id="addCart">
         INSERT INTO cart (book_id, owner_id)

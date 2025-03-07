@@ -18,6 +18,4 @@ public interface CartService {
 
     List<Cart> getCartsByOwnerId(Integer ownerId);
 
-    // 添加 searchCartsByTitle 方法
-    List<Cart> searchCartsByTitle(String title);
 }

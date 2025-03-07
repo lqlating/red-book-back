@@ -51,10 +51,4 @@ public class CartController {
         return Result.success(carts);
     }
 
-    // 添加 searchCartsByTitle 接口
-    @GetMapping("/search")
-    public Result searchCartsByTitle(@RequestParam String X) {
-        List<Cart> carts = cartService.searchCartsByTitle(X);
-        return Result.success(carts);
-    }
 }

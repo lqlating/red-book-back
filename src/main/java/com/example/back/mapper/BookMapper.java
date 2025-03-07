@@ -21,4 +21,9 @@ public interface BookMapper {
 
     List<Book> getBooksByType(@Param("book_type") String book_type);
 
+    // 新增方法
+    List<Book> getBooksBySellerId(@Param("book_seller_id") String book_seller_id);
+
+    // 新增方法
+    List<Book> getBooksByTitle(@Param("title") String title);
 }
