@@ -6,6 +6,7 @@ import com.example.back.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -18,7 +19,15 @@ public class BookController {
     @GetMapping("/list")
     public Result listBooks() {
         List<Book> books = bookService.listBooks();
-        return Result.success(books);
+        // 遍历书籍列表，将 book_img 转换为 Base64 格式
+        for (Book book : books) {
+            if (book.getBook_img() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(book.getBook_img());  // 转换为 Base64
+                book.setBook_img_url(base64Image);  // 设置 Base64 图片数据
+                book.setBook_img(null);  // 清空原始 BLOB 数据，避免返回
+            }
+        }
+        return Result.success(books);  // 返回带有 Base64 图片的书籍列表
     }
 
     @GetMapping("/{book_id}")
@@ -26,6 +35,12 @@ public class BookController {
         Book book = bookService.getBookById(book_id);
         if (book == null) {
             return Result.error("Book not found");
+        }
+        // 将 book_img 转换为 Base64 格式
+        if (book.getBook_img() != null) {
+            String base64Image = Base64.getEncoder().encodeToString(book.getBook_img());
+            book.setBook_img_url(base64Image);  // 设置 Base64 图片数据
+            book.setBook_img(null);  // 清空原始 BLOB 数据
         }
         return Result.success(book);
     }
