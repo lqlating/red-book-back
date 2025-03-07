@@ -5,14 +5,40 @@
 
 <mapper namespace="com.example.back.mapper.CartMapper">
 
-    <select id="listCarts" resultType="com.example.back.pojo.Cart">
-        SELECT cart_id, book_id, owner_id
+    <resultMap id="CartResultMap" type="com.example.back.pojo.Cart">
+        <id property="cart_id" column="cart_id"/>
+        <result property="owner_id" column="owner_id"/>
+        <association property="book" javaType="com.example.back.pojo.Book">
+            <id property="book_id" column="book_id"/>
+            <result property="book_title" column="book_title"/>
+        </association>
+    </resultMap>
+
+    <select id="listCarts" resultMap="CartResultMap">
+        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title
         FROM cart
+        JOIN book ON cart.book_id = book.book_id
     </select>
 
-    <select id="getCartById" parameterType="Integer" resultType="com.example.back.pojo.Cart">
-        SELECT cart_id, book_id, owner_id
-        FROM cart WHERE cart_id = #{cart_id}
+    <select id="getCartById" parameterType="Integer" resultMap="CartResultMap">
+        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title
+        FROM cart
+        JOIN book ON cart.book_id = book.book_id
+        WHERE cart.cart_id = #{cart_id}
+    </select>
+
+    <select id="getCartsByOwnerId" parameterType="Integer" resultMap="CartResultMap">
+        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title
+        FROM cart
+        JOIN book ON cart.book_id = book.book_id
+        WHERE cart.owner_id = #{owner_id}
+    </select>
+
+    <select id="searchCartsByTitle" parameterType="String" resultMap="CartResultMap">
+        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title
+        FROM cart
+        JOIN book ON cart.book_id = book.book_id
+        WHERE book.book_title LIKE CONCAT('%', #{title}, '%')
     </select>
 
     <insert id="addCart">
@@ -30,17 +56,11 @@
         DELETE FROM cart WHERE cart_id = #{cart_id}
     </delete>
 
-    <!-- 添加 deleteCarts 语句 -->
     <delete id="deleteCarts">
         DELETE FROM cart WHERE cart_id IN
         <foreach item="cartId" index="index" collection="cartIds" open="(" separator="," close=")">
             #{cartId}
         </foreach>
     </delete>
-
-    <select id="getCartsByOwnerId" parameterType="Integer" resultType="com.example.back.pojo.Cart">
-        SELECT cart_id, book_id, owner_id
-        FROM cart WHERE owner_id = #{owner_id}
-    </select>
 
 </mapper>

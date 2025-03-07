@@ -20,6 +20,8 @@ public interface CartMapper {
 
     List<Cart> getCartsByOwnerId(@Param("owner_id") Integer ownerId);
 
-    // 添加 deleteCarts 方法
     void deleteCarts(@Param("cartIds") List<Integer> cartIds);
+
+    // 添加 searchCartsByTitle 方法
+    List<Cart> searchCartsByTitle(@Param("title") String title);
 }

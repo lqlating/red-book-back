@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Cart {
     private Integer cart_id;      // 对应数据库中的 cart_id
-    private Integer book_id;      // 对应数据库中的 book_id
     private Integer owner_id;     // 对应数据库中的 owner_id
+    private Book book;            // 对应 book 实体的内容
+
 }

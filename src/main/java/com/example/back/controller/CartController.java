@@ -21,7 +21,6 @@ public class CartController {
         return Result.success(carts);
     }
 
-
     @GetMapping("/add")
     public Result addCart(@RequestParam Integer owner_id, @RequestParam Integer book_id) {
         cartService.addCart(owner_id, book_id);
@@ -49,6 +48,13 @@ public class CartController {
     @GetMapping("/owner/{owner_id}")
     public Result getCartsByOwnerId(@PathVariable Integer owner_id) {
         List<Cart> carts = cartService.getCartsByOwnerId(owner_id);
+        return Result.success(carts);
+    }
+
+    // 添加 searchCartsByTitle 接口
+    @GetMapping("/search")
+    public Result searchCartsByTitle(@RequestParam String X) {
+        List<Cart> carts = cartService.searchCartsByTitle(X);
         return Result.success(carts);
     }
 }

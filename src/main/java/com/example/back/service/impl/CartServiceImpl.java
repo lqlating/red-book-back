@@ -1,6 +1,7 @@
 package com.example.back.service.impl;
 
 import com.example.back.mapper.CartMapper;
+import com.example.back.pojo.Book;
 import com.example.back.pojo.Cart;
 import com.example.back.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,9 @@ public class CartServiceImpl implements CartService {
     public void addCart(Integer ownerId, Integer bookId) {
         Cart cart = new Cart();
         cart.setOwner_id(ownerId);
-        cart.setBook_id(bookId);
+        Book book = new Book();
+        book.setBook_id(bookId);
+        cart.setBook(book);
         cartMapper.addCart(cart);
     }
 
@@ -49,5 +52,10 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<Cart> getCartsByOwnerId(Integer ownerId) {
         return cartMapper.getCartsByOwnerId(ownerId);
+    }
+
+    @Override
+    public List<Cart> searchCartsByTitle(String title) {
+        return cartMapper.searchCartsByTitle(title);
     }
 }

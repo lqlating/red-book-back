@@ -19,15 +19,13 @@ public class BookController {
     @GetMapping("/list")
     public Result listBooks() {
         List<Book> books = bookService.listBooks();
-        // 遍历书籍列表，将 book_img 转换为 Base64 格式
         for (Book book : books) {
             if (book.getBook_img() != null) {
-                String base64Image = Base64.getEncoder().encodeToString(book.getBook_img());  // 转换为 Base64
-                book.setBook_img_url(base64Image);  // 设置 Base64 图片数据
-                book.setBook_img(null);  // 清空原始 BLOB 数据，避免返回
+                String book_img_base64 = Base64.getEncoder().encodeToString(book.getBook_img());
+                book.setBook_img_base64(book_img_base64);
             }
         }
-        return Result.success(books);  // 返回带有 Base64 图片的书籍列表
+        return Result.success(books);
     }
 
     @GetMapping("/{book_id}")
@@ -36,11 +34,10 @@ public class BookController {
         if (book == null) {
             return Result.error("Book not found");
         }
-        // 将 book_img 转换为 Base64 格式
+        // 将 book_img 转换为 base64 并存储到 book_img_base64 字段
         if (book.getBook_img() != null) {
-            String base64Image = Base64.getEncoder().encodeToString(book.getBook_img());
-            book.setBook_img_url(base64Image);  // 设置 Base64 图片数据
-            book.setBook_img(null);  // 清空原始 BLOB 数据
+            String book_img_base64 = Base64.getEncoder().encodeToString(book.getBook_img());
+            book.setBook_img_base64(book_img_base64);
         }
         return Result.success(book);
     }
@@ -66,6 +63,12 @@ public class BookController {
     @GetMapping("/type/{book_type}")
     public Result getBooksByType(@PathVariable String book_type) {
         List<Book> books = bookService.getBooksByType(book_type);
+        for (Book book : books) {
+            if (book.getBook_img() != null) {
+                String book_img_base64 = Base64.getEncoder().encodeToString(book.getBook_img());
+                book.setBook_img_base64(book_img_base64);
+            }
+        }
         return Result.success(books);
     }
 
