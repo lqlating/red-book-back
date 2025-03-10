@@ -16,5 +16,6 @@ public class Book {
     private String book_title;      // 对应数据库中的 book_title
     private String book_type;
     private String book_img_base64; // 新增字段，用于存储 Base64 格式的图片字符串
+    private String book_descripe;
 
 }

@@ -5,6 +5,7 @@
 
 <mapper namespace="com.example.back.mapper.CartMapper">
 
+    <!-- 定义结果映射，保持下划线格式字段 -->
     <resultMap id="CartResultMap" type="com.example.back.pojo.Cart">
         <id property="cart_id" column="cart_id"/>
         <result property="owner_id" column="owner_id"/>
@@ -20,45 +21,57 @@
         </association>
     </resultMap>
 
+    <!-- 查询所有购物车项 -->
     <select id="listCarts" resultMap="CartResultMap">
-        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title, book.book_img, book.book_seller_id, book.book_price, book.book_writer, book.book_type, 
-               CASE WHEN book.book_img IS NOT NULL THEN TO_BASE64(book.book_img) ELSE NULL END AS book_img_base64
+        SELECT cart.cart_id, cart.book_id, cart.owner_id,
+        book.book_title, book.book_img, book.book_seller_id,
+        book.book_price, book.book_writer, book.book_type,
+        CASE WHEN book.book_img IS NOT NULL THEN TO_BASE64(book.book_img) ELSE NULL END AS book_img_base64
         FROM cart
         JOIN book ON cart.book_id = book.book_id
     </select>
 
+    <!-- 根据购物车ID查询 -->
     <select id="getCartById" parameterType="Integer" resultMap="CartResultMap">
-        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title, book.book_img, book.book_seller_id, book.book_price, book.book_writer, book.book_type, 
-               CASE WHEN book.book_img IS NOT NULL THEN TO_BASE64(book.book_img) ELSE NULL END AS book_img_base64
+        SELECT cart.cart_id, cart.book_id, cart.owner_id,
+        book.book_title, book.book_img, book.book_seller_id,
+        book.book_price, book.book_writer, book.book_type,
+        CASE WHEN book.book_img IS NOT NULL THEN TO_BASE64(book.book_img) ELSE NULL END AS book_img_base64
         FROM cart
         JOIN book ON cart.book_id = book.book_id
         WHERE cart.cart_id = #{cart_id}
     </select>
 
+    <!-- 根据用户ID查询购物车 -->
     <select id="getCartsByOwnerId" parameterType="Integer" resultMap="CartResultMap">
-        SELECT cart.cart_id, cart.book_id, cart.owner_id, book.book_title, book.book_img, book.book_seller_id, book.book_price, book.book_writer, book.book_type, 
-               CASE WHEN book.book_img IS NOT NULL THEN TO_BASE64(book.book_img) ELSE NULL END AS book_img_base64
+        SELECT cart.cart_id, cart.book_id, cart.owner_id,
+        book.book_title, book.book_img, book.book_seller_id,
+        book.book_price, book.book_writer, book.book_type,
+        CASE WHEN book.book_img IS NOT NULL THEN TO_BASE64(book.book_img) ELSE NULL END AS book_img_base64
         FROM cart
         JOIN book ON cart.book_id = book.book_id
         WHERE cart.owner_id = #{owner_id}
     </select>
 
-
+    <!-- 添加购物车项 -->
     <insert id="addCart">
         INSERT INTO cart (book_id, owner_id)
-        VALUES (#{book_id}, #{owner_id})
+        VALUES (#{book.book_id}, #{owner_id})
     </insert>
 
+    <!-- 更新购物车项 -->
     <update id="updateCart">
         UPDATE cart
-        SET book_id = #{book_id}, owner_id = #{owner_id}
+        SET book_id = #{book.book_id}, owner_id = #{owner_id}
         WHERE cart_id = #{cart_id}
     </update>
 
+    <!-- 删除单个购物车项 -->
     <delete id="deleteCart">
         DELETE FROM cart WHERE cart_id = #{cart_id}
     </delete>
 
+    <!-- 批量删除购物车项 -->
     <delete id="deleteCarts">
         DELETE FROM cart WHERE cart_id IN
         <foreach item="cartId" index="index" collection="cartIds" open="(" separator="," close=")">
