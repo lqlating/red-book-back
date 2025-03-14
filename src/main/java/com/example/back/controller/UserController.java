@@ -13,29 +13,27 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
-//    @RequestMapping(value = "/SearchUser",method = RequestMethod.GET)
+
     @GetMapping("/SearchUserById/{id}")
-    public Result search(@PathVariable Integer id){
+    public Result search(@PathVariable Integer id) {
         List<User> userList = userService.search(id);
         return Result.success(userList);
     }
 
     @DeleteMapping("/DeleteUser/{id}")
-    public Result delete(@PathVariable Integer id){
+    public Result delete(@PathVariable Integer id) {
         userService.delete(id);
         return Result.success();
     }
 
     @PostMapping("/NewUser")
-    public Result add(@RequestBody User user){
+    public Result add(@RequestBody User user) {
         userService.add(user);
         return Result.success();
     }
 
-
-
     @PutMapping("/editUser")
-    public  Result update(@RequestBody User user){
+    public Result update(@RequestBody User user) {
         userService.update(user);
         return Result.success();
     }
@@ -48,16 +46,27 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Result verify(@RequestBody LoginRequest loginRequest){
+    public Result verify(@RequestBody LoginRequest loginRequest) {
         String account = loginRequest.getAccount();
         String password = loginRequest.getPassword();
-        User user = userService.verify(password,account);
+        User user = userService.verify(password, account);
         System.out.println("login success");
-        if(user!=null){
+        if (user != null) {
             return Result.success(user);
-        }
-        else{
+        } else {
             return Result.error("密码或者账号错误！请重新输入");
+        }
+    }
+
+    // 新增接口：获取所有 is_banned 为 1 的用户数据
+    @GetMapping("/getBannedUsers")
+    public Result getBannedUsers() {
+        List<User> bannedUsers = userService.getBannedUsers();
+
+        if (!bannedUsers.isEmpty()) {
+            return Result.success(bannedUsers);  // 返回用户数据
+        } else {
+            return Result.error("Banned users not found");
         }
     }
 }

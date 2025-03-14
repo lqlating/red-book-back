@@ -5,7 +5,6 @@ import com.example.back.pojo.Comment;
 import com.example.back.pojo.Result;
 import com.example.back.pojo.User;
 import com.example.back.service.CommentService;
-import com.example.back.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +15,14 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentMapper commentMapper;
 
-    @Autowired
-    private UserService userService; // 注入 UserService
-
     @Override
     public List<Comment> getCommentBylikeCount(Integer article_id) {
         return commentMapper.getCommentBylikeCount(article_id);
     }
 
     @Override
-    public List<Comment> getCommentByTime(Integer article_id) {
-        return commentMapper.getCommentByTime(article_id);
+    public List<Comment> getCommentByTime(Integer articleId) {
+        return commentMapper.getCommentByTime(articleId);
     }
 
     @Override
@@ -46,26 +42,15 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<User> findUserByCommentId(Integer commentId) {
-        Integer userId = commentMapper.findUserIdByCommentId(commentId);
-        if (userId != null) {
-            return userService.search(userId);
-        }
-        return null;
+        // 假设这里有一个方法可以返回 List<User>
+        // 这里仅作示例，实际需要根据业务逻辑实现
+        return commentMapper.findUserByCommentId(commentId);
     }
 
     @Override
     public Result addComment(Comment comment) {
-        try {
-            // 插入评论并获取插入行数
-            int rows = commentMapper.insertComment(comment);
-            if (rows > 0) {
-                return Result.success();
-            } else {
-                return Result.error("评论添加失败");
-            }
-        } catch (Exception e) {
-            return Result.error("评论添加失败: " + e.getMessage());
-        }
+        commentMapper.insertComment(comment);
+        return Result.success();
     }
 
     @Override
@@ -73,9 +58,14 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.findCommentsByUserId(userId);
     }
 
-    // 根据 comment_id 查找评论
     @Override
     public List<Comment> findCommentByCommentId(Integer commentId) {
         return commentMapper.findCommentByCommentId(commentId);
+    }
+
+    // 新增方法：获取所有 is_banned 为 1 的评论数据
+    @Override
+    public List<Comment> getBannedComments() {
+        return commentMapper.getBannedComments();
     }
 }

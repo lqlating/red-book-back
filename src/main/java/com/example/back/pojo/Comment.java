@@ -12,9 +12,11 @@ public class Comment {
     private Integer comment_id;
     private Integer article_id;
     private Integer user_id;
-    private  Integer parent_id;
-    private  Integer like_count;
+    private Integer parent_id;
+    private Integer like_count;
     private String publish_time;
     private Integer star_count;
 
+    // 新增字段
+    private Integer is_banned;
 }

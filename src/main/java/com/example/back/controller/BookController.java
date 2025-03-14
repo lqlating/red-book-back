@@ -44,8 +44,14 @@ public class BookController {
 
     @PostMapping("/add")
     public Result addBook(@RequestBody Book book) {
+        // 将 Base64 图片转换为字节数组
+        if (book.getBook_img_base64() != null) {
+            byte[] imageBytes = Base64.getDecoder().decode(book.getBook_img_base64());
+            book.setBook_img(imageBytes); // 设置为字节数组
+            book.setBook_img_base64(null); // 清空 Base64 数据，避免冗余
+        }
         bookService.addBook(book);
-        return Result.success();
+        return Result.success("Book added successfully");
     }
 
     @PutMapping("/update")
@@ -76,6 +82,13 @@ public class BookController {
     @GetMapping("/search")
     public Result getBooksByTitle(@RequestParam String title) {
         List<Book> books = bookService.getBooksByTitle(title);
+        return Result.success(books);
+    }
+
+    // 新增接口定义
+    @GetMapping("/search/title")
+    public Result getBooksByTitleContaining(@RequestParam String title) {
+        List<Book> books = bookService.getBooksByTitleContaining(title);
         return Result.success(books);
     }
 }

@@ -7,4 +7,9 @@
     <select id="verify" resultType="com.example.back.pojo.User">
         SELECT * FROM user_info WHERE account = #{account} AND password = #{password}
     </select>
+
+    <!-- 新增 SQL 语句：获取所有 is_banned 为 1 的用户数据 -->
+    <select id="getBannedUsers" resultType="com.example.back.pojo.User">
+        SELECT * FROM user_info WHERE is_banned = 1;
+    </select>
 </mapper>

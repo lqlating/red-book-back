@@ -22,8 +22,8 @@ public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
-    
-    @Operation(summary = "Filter content based on type", description = "Returns a list of articles filtered by type")
+
+    @Operation(summary = "Filter content based on type", description = "Returns a list of articles filtered by type, is_review = 1, and is_banned = 0")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Articles retrieved successfully",
                     content = { @Content(mediaType = "application/json",
@@ -135,6 +135,9 @@ public class ArticleController {
         article.setStarCount(0);
         article.setPublicationTime(LocalDate.now().toString()); // 获取当前日期
         article.setAddress(getRandomAddress()); // 获取随机地址
+        article.setIsReview(0); // 设置 isReview 默认值为 0
+        article.setIsBanned(0); // 设置 isBanned 默认值为 0
+
         // 将 Base64 图片转换为字节数组
         if (article.getImg() != null) {
             byte[] imageBytes = Base64.getDecoder().decode(article.getImg());
@@ -149,5 +152,63 @@ public class ArticleController {
         String[] provinces = {"北京", "上海", "广东", "江苏", "浙江", "四川", "陕西", "山东", "湖北", "湖南"};
         Random random = new Random();
         return provinces[random.nextInt(provinces.length)];
+    }
+
+    // 新增接口：获取所有 is_review 为 0 的文章数据
+    @Operation(summary = "Get all unreviewed articles", description = "Returns a list of articles with is_review = 0")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Unreviewed articles retrieved successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Article.class)) }),
+            @ApiResponse(responseCode = "404", description = "Unreviewed articles not found",
+                    content = @Content)
+    })
+    @GetMapping("/getUnreviewedArticles")
+    public Result getUnreviewedArticles() {
+        List<Article> unreviewedArticles = articleService.getUnreviewedArticles();
+
+        // 将 BLOB 图片数据转换为 Base64 格式
+        for (Article article : unreviewedArticles) {
+            if (article.getImg() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(article.getImg());
+                article.setImg_url(base64Image);
+                article.setImg(null);  // 清空 BLOB 数据
+            }
+        }
+
+        if (!unreviewedArticles.isEmpty()) {
+            return Result.success(unreviewedArticles);  // 返回 Base64 编码后的图片数据
+        } else {
+            return Result.error("Unreviewed articles not found");
+        }
+    }
+
+    // 新增接口：获取所有 is_banned 为 1 的文章数据
+    @Operation(summary = "Get all banned articles", description = "Returns a list of articles with is_banned = 1")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Banned articles retrieved successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Article.class)) }),
+            @ApiResponse(responseCode = "404", description = "Banned articles not found",
+                    content = @Content)
+    })
+    @GetMapping("/getBannedArticles")
+    public Result getBannedArticles() {
+        List<Article> bannedArticles = articleService.getBannedArticles();
+
+        // 将 BLOB 图片数据转换为 Base64 格式
+        for (Article article : bannedArticles) {
+            if (article.getImg() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(article.getImg());
+                article.setImg_url(base64Image);
+                article.setImg(null);  // 清空 BLOB 数据
+            }
+        }
+
+        if (!bannedArticles.isEmpty()) {
+            return Result.success(bannedArticles);  // 返回 Base64 编码后的图片数据
+        } else {
+            return Result.error("Banned articles not found");
+        }
     }
 }

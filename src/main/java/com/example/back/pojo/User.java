@@ -2,6 +2,8 @@ package com.example.back.pojo;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,5 +17,8 @@ public class User {
     private String introduction;
     private String subscript;
     private String fans;
-    //test
+
+    // 新增字段
+    private LocalDateTime ban_until;
+    private Integer is_banned;
 }

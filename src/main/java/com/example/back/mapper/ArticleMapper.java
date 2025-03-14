@@ -8,8 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface ArticleMapper {
-//    List<Article> list(String type);
-    @Select("SELECT * FROM article WHERE txt_type = #{type};\n")
+    @Select("SELECT * FROM article WHERE txt_type = #{type} AND is_review = 1 AND is_banned = 0;")
     List<Article> list(String type);
 
     @Update("UPDATE article\n" +
@@ -22,12 +21,10 @@ public interface ArticleMapper {
             "WHERE article_id = #{articleID};\n")
     void subLike(Integer articleID);
 
-
     @Update("UPDATE article\n" +
             "SET star_count = star_count + 1\n" +
             "WHERE article_id = #{articleID};\n")
     void addStar(Integer articleID);
-
 
     @Update("UPDATE article\n" +
             "SET star_count = star_count - 1\n" +
@@ -54,11 +51,15 @@ public interface ArticleMapper {
     List<Article> findArticlesByAuthorId(Integer authorId);
 
     // 插入文章的 SQL 语句
-    // 插入文章的 SQL 语句
-    @Insert("INSERT INTO article (img, img_url, txt_type, content, title, like_count, publication_time, address, star_count, author_id) " +
-            "VALUES (#{imgData}, #{imgUrl}, #{txtType}, #{content}, #{title}, #{likeCount}, #{publicationTime}, #{address}, #{starCount}, #{authorId})")
+    @Insert("INSERT INTO article (img, img_url, txt_type, content, title, like_count, publication_time, address, star_count, author_id, is_review, is_banned) " +
+            "VALUES (#{imgData}, #{imgUrl}, #{txtType}, #{content}, #{title}, #{likeCount}, #{publicationTime}, #{address}, #{starCount}, #{authorId}, #{isReview}, #{isBanned})")
     void insert(ArticleRequest article);
 
+    // 新增方法：获取所有 is_review 为 0 的文章数据
+    @Select("SELECT * FROM article WHERE is_review = 0;")
+    List<Article> getUnreviewedArticles();
 
-
+    // 新增方法：获取所有 is_banned 为 1 的文章数据
+    @Select("SELECT * FROM article WHERE is_banned = 1;")
+    List<Article> getBannedArticles();
 }

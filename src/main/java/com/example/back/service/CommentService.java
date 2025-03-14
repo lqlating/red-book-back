@@ -27,4 +27,7 @@ public interface CommentService {
 
     // 根据 comment_id 查找评论
     List<Comment> findCommentByCommentId(Integer commentId);
+
+    // 新增方法：获取所有 is_banned 为 1 的评论数据
+    List<Comment> getBannedComments();
 }

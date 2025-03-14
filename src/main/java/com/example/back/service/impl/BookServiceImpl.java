@@ -62,4 +62,17 @@ public class BookServiceImpl implements BookService {
         }
         return books;
     }
+
+    // 新增方法实现
+    @Override
+    public List<Book> getBooksByTitleContaining(String title) {
+        List<Book> books = bookMapper.getBooksByTitleContaining(title);
+        for (Book book : books) {
+            if (book.getBook_img() != null) {
+                String book_img_base64 = Base64.getEncoder().encodeToString(book.getBook_img());
+                book.setBook_img_base64(book_img_base64);
+            }
+        }
+        return books;
+    }
 }
