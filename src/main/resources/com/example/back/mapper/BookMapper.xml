@@ -48,4 +48,9 @@
     <select id="getBooksByTitle" parameterType="String" resultType="com.example.back.pojo.Book">
         SELECT * FROM book WHERE book_title LIKE CONCAT('%', #{title}, '%')
     </select>
+
+    <!-- 新增 SQL 语句 -->
+    <select id="getBooksByTitleContaining" parameterType="String" resultType="com.example.back.pojo.Book">
+        SELECT * FROM book WHERE book_title LIKE CONCAT('%', #{title}, '%')
+    </select>
 </mapper>

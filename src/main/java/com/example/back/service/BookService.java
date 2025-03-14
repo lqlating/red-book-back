@@ -21,4 +21,6 @@ public interface BookService {
     // 新增方法
     List<Book> getBooksBySellerId(String bookSellerId);
 
+    // 新增方法
+    List<Book> getBooksByTitleContaining(String title);
 }

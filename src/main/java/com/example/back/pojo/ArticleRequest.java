@@ -12,6 +12,9 @@ public class ArticleRequest {
     private Integer authorId;
     private String content;
     private String title;
+
+
+    //自动生成的
     private Integer likeCount;
     private Integer starCount;
     private String publicationTime;
