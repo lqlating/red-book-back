@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.back.mapper.TitleMapper">
+
+    <select id="findAll" resultType="com.example.back.pojo.Title">
+        SELECT * FROM title
+    </select>
+
+    <select id="findByTitle" parameterType="string" resultType="com.example.back.pojo.Title">
+        SELECT * FROM title WHERE title = #{title}
+    </select>
+
+    <insert id="insertTitle">
+        INSERT INTO title (title, value) VALUES (#{title}, #{value})
+    </insert>
+
+    <delete id="deleteTitle">
+        DELETE FROM title WHERE id = #{id}
+    </delete>
+
+</mapper>

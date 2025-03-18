@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.back.mapper.ReportMapper">
+    <select id="getReportsByArticleType" resultType="com.example.back.pojo.Report">
+        SELECT * FROM report WHERE report_type = 'article'
+    </select>
+
+    <select id="getReportsByBookType" resultType="com.example.back.pojo.Report">
+        SELECT * FROM report WHERE report_type = 'book'
+    </select>
+
+    <select id="getReportsByCommentType" resultType="com.example.back.pojo.Report">
+        SELECT * FROM report WHERE report_type = 'comment'
+    </select>
+
+    <select id="getReportsByUserType" resultType="com.example.back.pojo.Report">
+        SELECT * FROM report WHERE report_type = 'user'
+    </select>
+</mapper>
