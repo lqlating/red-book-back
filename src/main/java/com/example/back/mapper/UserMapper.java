@@ -25,7 +25,6 @@ public interface UserMapper {
     @Select("SELECT * FROM user_info WHERE username LIKE CONCAT('%', #{username}, '%')")
     List<User> searchByUsername(@Param("username") String username);
 
-    // 新增方法：获取所有 is_banned 为 1 的用户数据
-    @Select("SELECT * FROM user_info WHERE is_banned = 1;")
+    // 删除了Java接口中的getBannedUsers方法定义，改为只在XML中定义
     List<User> getBannedUsers();
 }
