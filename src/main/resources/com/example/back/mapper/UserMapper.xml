@@ -12,4 +12,12 @@
     <select id="getBannedUsers" resultType="com.example.back.pojo.User">
         SELECT * FROM user_info WHERE is_banned = 1;
     </select>
+
+    <!-- 新增 SQL 语句：更新用户信息 -->
+    <update id="updateUser">
+        UPDATE user_info 
+        SET is_banned = #{is_banned}, 
+            ban_until = #{ban_until} 
+        WHERE id = #{id}
+    </update>
 </mapper>

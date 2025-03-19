@@ -75,4 +75,10 @@ public class BookServiceImpl implements BookService {
         }
         return books;
     }
+
+    // 新增方法：将指定书籍的 is_review 和 is_banned 设置为 1
+    @Override
+    public void setReviewedAndBanned(Integer bookId) {
+        bookMapper.setReviewedAndBanned(bookId);
+    }
 }
