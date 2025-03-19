@@ -78,7 +78,7 @@ public class UserController {
         return Result.success("User banned successfully");
     }
 
-    // 新增接口：解封用户
+    // 新增接口：解封用户.
     @PostMapping("/unbanUser")
     public Result unbanUser(@RequestParam Integer userId) {
         userService.unbanUser(userId);
