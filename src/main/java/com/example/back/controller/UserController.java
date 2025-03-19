@@ -7,6 +7,7 @@ import com.example.back.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -68,5 +69,19 @@ public class UserController {
         } else {
             return Result.error("Banned users not found");
         }
+    }
+
+    // 新增接口：禁用用户
+    @PostMapping("/banUser")
+    public Result banUser(@RequestParam Integer userId) {
+        userService.banUser(userId);
+        return Result.success("User banned successfully");
+    }
+
+    // 新增接口：解封用户
+    @PostMapping("/unbanUser")
+    public Result unbanUser(@RequestParam Integer userId) {
+        userService.unbanUser(userId);
+        return Result.success("User unbanned successfully");
     }
 }

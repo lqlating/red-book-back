@@ -211,4 +211,19 @@ public class ArticleController {
             return Result.error("Banned articles not found");
         }
     }
+
+    // 新增接口：将指定文章的 is_review 和 is_banned 设置为 1
+    @Operation(summary = "Set article as reviewed and banned", description = "Sets the is_review and is_banned fields of the specified article to 1")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Article updated successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Article.class)) }),
+            @ApiResponse(responseCode = "404", description = "Article not found",
+                    content = @Content)
+    })
+    @PutMapping("/setReviewedAndBanned/{articleId}")
+    public Result setReviewedAndBanned(@PathVariable Integer articleId) {
+        articleService.setReviewedAndBanned(articleId);
+        return Result.success("Article set as reviewed and banned successfully");
+    }
 }

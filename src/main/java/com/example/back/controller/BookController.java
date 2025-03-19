@@ -3,6 +3,11 @@ package com.example.back.controller;
 import com.example.back.pojo.Book;
 import com.example.back.pojo.Result;
 import com.example.back.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +15,6 @@ import java.util.Base64;
 import java.util.List;
 
 @RestController
-@RequestMapping("/books")
 public class BookController {
 
     @Autowired
@@ -90,5 +94,20 @@ public class BookController {
     public Result getBooksByTitleContaining(@RequestParam String title) {
         List<Book> books = bookService.getBooksByTitleContaining(title);
         return Result.success(books);
+    }
+
+    // 新增接口：将指定书籍的 is_review 和 is_banned 设置为 1
+    @Operation(summary = "Set book as reviewed and banned", description = "Sets the is_review and is_banned fields of the specified book to 1")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Book updated successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Book.class)) }),
+            @ApiResponse(responseCode = "404", description = "Book not found",
+                    content = @Content)
+    })
+    @PutMapping("/setReviewedAndBanned/{bookId}")
+    public Result setReviewedAndBanned(@PathVariable Integer bookId) {
+        bookService.setReviewedAndBanned(bookId);
+        return Result.success("Book set as reviewed and banned successfully");
     }
 }

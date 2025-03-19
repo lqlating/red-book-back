@@ -24,4 +24,10 @@ public interface UserService {
 
     // 新增方法：获取所有 is_banned 为 1 的用户数据
     List<User> getBannedUsers();
+
+    // 新增方法：禁用用户
+    void banUser(Integer userId);
+
+    // 新增方法：解封用户
+    void unbanUser(Integer userId);
 }

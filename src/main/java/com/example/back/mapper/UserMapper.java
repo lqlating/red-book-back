@@ -1,6 +1,5 @@
 package com.example.back.mapper;
 
-import com.example.back.pojo.Result;
 import com.example.back.pojo.User;
 import org.apache.ibatis.annotations.*;
 
@@ -27,4 +26,7 @@ public interface UserMapper {
 
     // 删除了Java接口中的getBannedUsers方法定义，改为只在XML中定义
     List<User> getBannedUsers();
+
+    // 新增方法：更新用户信息
+    void updateUser(User user);
 }

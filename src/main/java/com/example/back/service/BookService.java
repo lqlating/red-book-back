@@ -23,4 +23,7 @@ public interface BookService {
 
     // 新增方法
     List<Book> getBooksByTitleContaining(String title);
+
+    // 新增方法：将指定书籍的 is_review 和 is_banned 设置为 1
+    void setReviewedAndBanned(Integer bookId);
 }
