@@ -66,4 +66,6 @@ public interface ArticleMapper {
     // 新增方法：将指定文章的 is_review 和 is_banned 设置为 1
     @Update("UPDATE article SET is_review = 1, is_banned = 1 WHERE article_id = #{articleId};")
     void setReviewedAndBanned(@Param("articleId") Integer articleId);
+
+    Object getArticleById(Integer id);
 }

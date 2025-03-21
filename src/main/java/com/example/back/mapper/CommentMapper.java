@@ -89,4 +89,6 @@ public interface CommentMapper {
     // 新增方法：获取所有 is_banned 为 1 的评论数据
     @Select("SELECT * FROM comment WHERE is_banned = 1")
     List<Comment> getBannedComments();
+
+    Object getCommentById(Integer id);
 }

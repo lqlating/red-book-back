@@ -30,4 +30,6 @@ public interface UserService {
 
     // 新增方法：解封用户
     void unbanUser(Integer userId);
+
+    Object getUserById(Integer id);
 }

@@ -75,4 +75,9 @@ public class ArticleServiceImpl implements ArticleService {
     public void setReviewedAndBanned(Integer articleId) {
         articleMapper.setReviewedAndBanned(articleId);
     }
+
+    @Override
+    public Object getArticleById(Integer id) {
+        return articleMapper.getArticleById(id);
+    }
 }

@@ -19,4 +19,32 @@
     <select id="getReportsByUserType" resultType="com.example.back.pojo.Report">
         SELECT * FROM report WHERE report_type = 'user'
     </select>
+
+    <resultMap id="ReportResultMap" type="com.example.back.pojo.Report">
+        <id column="report_id" property="reportId"/>
+        <result column="reporter_id" property="reporterId"/>
+        <result column="report_reason" property="reportReason"/>
+        <result column="content_type" property="contentType"/>
+        <result column="report_content_id" property="reportContentId"/>
+    </resultMap>
+
+    <select id="getReportsByContentType" resultMap="ReportResultMap">
+        SELECT * FROM report WHERE content_type = #{contentType}
+    </select>
+
+    <select id="getArticleById" resultType="com.example.back.pojo.Article">
+        SELECT * FROM article WHERE article_id = #{id}
+    </select>
+
+    <select id="getCommentById" resultType="com.example.back.pojo.Comment">
+        SELECT * FROM comment WHERE comment_id = #{id}
+    </select>
+
+    <select id="getBookById" resultType="com.example.back.pojo.Book">
+        SELECT * FROM book WHERE book_id = #{id}
+    </select>
+
+    <select id="getUserById" resultType="com.example.back.pojo.User">
+        SELECT * FROM user WHERE user_id = #{id}
+    </select>
 </mapper>

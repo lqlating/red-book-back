@@ -34,7 +34,7 @@ public class BookController {
 
     @GetMapping("/{book_id}")
     public Result getBookById(@PathVariable Integer book_id) {
-        Book book = bookService.getBookById(book_id);
+        Book book = (Book) bookService.getBookById(book_id);
         if (book == null) {
             return Result.error("Book not found");
         }
@@ -46,7 +46,7 @@ public class BookController {
         return Result.success(book);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/addBook")
     public Result addBook(@RequestBody Book book) {
         // 将 Base64 图片转换为字节数组
         if (book.getBook_img_base64() != null) {

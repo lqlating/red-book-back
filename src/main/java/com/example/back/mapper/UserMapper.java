@@ -29,4 +29,6 @@ public interface UserMapper {
 
     // 新增方法：更新用户信息
     void updateUser(User user);
+
+    Object getUserById(Integer id);
 }

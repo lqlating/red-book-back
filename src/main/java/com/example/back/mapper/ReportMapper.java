@@ -6,9 +6,15 @@ import java.util.List;
 
 @Mapper
 public interface ReportMapper {
-    // 移除所有的@Select注解，只保留方法声明
+    List<Report> getReportsByContentType(String contentType);
     List<Report> getReportsByArticleType();
     List<Report> getReportsByBookType();
     List<Report> getReportsByCommentType();
     List<Report> getReportsByUserType();
+    
+    // 添加新的查询方法
+    Object getArticleById(Integer id);
+    Object getCommentById(Integer id);
+    Object getBookById(Integer id);
+    Object getUserById(Integer id);
 }

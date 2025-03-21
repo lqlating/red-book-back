@@ -9,4 +9,5 @@ public interface ReportService {
     List<Report> getReportsByBookType();
     List<Report> getReportsByCommentType();
     List<Report> getReportsByUserType();
+    List<Report> getReportsByContentType(String contentType);
 }

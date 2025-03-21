@@ -68,4 +68,9 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> getBannedComments() {
         return commentMapper.getBannedComments();
     }
+
+    @Override
+    public Object getCommentById(Integer id) {
+        return commentMapper.getCommentById(id);
+    }
 }

@@ -128,23 +128,23 @@ public class ArticleController {
     }
 
     @Operation(summary = "Add a new article", description = "Inserts a new article into the database")
-    @PostMapping("/add")
-    public Result addArticle(@RequestBody ArticleRequest article) {
+    @PostMapping("/api/addArticle")
+    public Result addArticle(@RequestBody ArticleRequest articleRequest) {
         // 设置默认值
-        article.setLikeCount(0);
-        article.setStarCount(0);
-        article.setPublicationTime(LocalDate.now().toString()); // 获取当前日期
-        article.setAddress(getRandomAddress()); // 获取随机地址
-        article.setIsReview(0); // 设置 isReview 默认值为 0
-        article.setIsBanned(0); // 设置 isBanned 默认值为 0
+        articleRequest.setLikeCount(0);
+        articleRequest.setStarCount(0);
+        articleRequest.setPublicationTime(LocalDate.now().toString()); // 获取当前日期
+        articleRequest.setAddress(getRandomAddress()); // 获取随机地址
+        articleRequest.setIsReview(0); // 设置 isReview 默认值为 0
+        articleRequest.setIsBanned(0); // 设置 isBanned 默认值为 0
 
         // 将 Base64 图片转换为字节数组
-        if (article.getImg() != null) {
-            byte[] imageBytes = Base64.getDecoder().decode(article.getImg());
-            article.setImgData(imageBytes); // 设置为字节数组
-            article.setImg(null); // 清空 Base64 数据，避免冗余
+        if (articleRequest.getImg() != null) {
+            byte[] imageBytes = Base64.getDecoder().decode(articleRequest.getImg());
+            articleRequest.setImgData(imageBytes); // 设置为字节数组
+            articleRequest.setImg(null); // 清空 Base64 数据，避免冗余
         }
-        articleService.save(article);
+        articleService.save(articleRequest);
         return Result.success("Article added successfully");
     }
 

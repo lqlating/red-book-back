@@ -30,4 +30,6 @@ public interface CommentService {
 
     // 新增方法：获取所有 is_banned 为 1 的评论数据
     List<Comment> getBannedComments();
+
+    Object getCommentById(Integer id);
 }
