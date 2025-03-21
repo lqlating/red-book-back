@@ -3,6 +3,7 @@ package com.example.back.controller;
 import com.example.back.pojo.LoginRequest;
 import com.example.back.pojo.Result;
 import com.example.back.pojo.User;
+import com.example.back.pojo.UserUpdateRequest;
 import com.example.back.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -83,5 +84,30 @@ public class UserController {
     public Result unbanUser(@RequestParam Integer userId) {
         userService.unbanUser(userId);
         return Result.success("User unbanned successfully");
+    }
+
+    @PutMapping("/updateUserInfo")
+    public Result updateUserInfo(@RequestBody UserUpdateRequest request) {
+        if (request.getId() == null) {
+            return Result.error("User ID is required");
+        }
+        
+        // 获取当前用户信息
+        List<User> users = userService.search(request.getId());
+        if (users == null || users.isEmpty()) {
+            return Result.error("User not found");
+        }
+        
+        User user = users.get(0);
+        
+        // 只更新非空字段
+        if (request.getUsername() != null) user.setUsername(request.getUsername());
+        if (request.getAvatar() != null) user.setAvatar(request.getAvatar());
+        if (request.getEmail() != null) user.setEmail(request.getEmail());
+        if (request.getGender() != null) user.setGender(request.getGender());
+        if (request.getIntroduction() != null) user.setIntroduction(request.getIntroduction());
+        
+        userService.update(user);
+        return Result.success();
     }
 }

@@ -14,10 +14,15 @@
     </select>
 
     <!-- 新增 SQL 语句：更新用户信息 -->
-    <update id="updateUser">
-        UPDATE user_info 
-        SET is_banned = #{is_banned}, 
-            ban_until = #{ban_until} 
+    <update id="update">
+        UPDATE user_info
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="introduction != null">introduction = #{introduction},</if>
+        </set>
         WHERE id = #{id}
     </update>
 
