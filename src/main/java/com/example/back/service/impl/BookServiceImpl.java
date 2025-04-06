@@ -81,4 +81,35 @@ public class BookServiceImpl implements BookService {
     public void setReviewedAndBanned(Integer bookId) {
         bookMapper.setReviewedAndBanned(bookId);
     }
+
+    @Override
+    public List<Book> getUnreviewedBooks() {
+        List<Book> books = bookMapper.getUnreviewedBooks();
+        // 处理图片的 Base64 转换
+        for (Book book : books) {
+            if (book.getBook_img() != null) {
+                String book_img_base64 = Base64.getEncoder().encodeToString(book.getBook_img());
+                book.setBook_img_base64(book_img_base64);
+            }
+        }
+        return books;
+    }
+
+    @Override
+    public List<Book> getBannedBooks() {
+        List<Book> books = bookMapper.getBannedBooks();
+        // 处理图片的 Base64 转换
+        for (Book book : books) {
+            if (book.getBook_img() != null) {
+                String book_img_base64 = Base64.getEncoder().encodeToString(book.getBook_img());
+                book.setBook_img_base64(book_img_base64);
+            }
+        }
+        return books;
+    }
+
+    @Override
+    public void unbanBook(Integer bookId) {
+        bookMapper.unbanBook(bookId);
+    }
 }

@@ -26,7 +26,7 @@ public interface CommentMapper {
             "AND parent_id IS NULL " +
             "AND is_banned = 0 " +
             "ORDER BY publish_time DESC")
-    List<Comment> getCommentByTime(Integer articleId);
+    List<Comment> getCommentByTime(Integer article_id);
 
     // 获取子评论数量
     @Select("SELECT COUNT(*) FROM comment WHERE parent_id = #{comment_id} AND is_banned = 0")
@@ -43,7 +43,7 @@ public interface CommentMapper {
             )
             SELECT * FROM CommentHierarchy ORDER BY publish_time ASC;
             """)
-    List<Comment> getCommentsByParentId(Integer parentId);
+    List<Comment> getCommentsByParentId(Integer parent_id);
 
     // 根据根评论id一键获得子评论数量
     @Select("""
@@ -56,19 +56,22 @@ public interface CommentMapper {
             )
             SELECT COUNT(*) FROM CommentHierarchy;
             """)
-    int getCommentCountByParentId(Integer parentId);
+    int getCommentCountByParentId(Integer parent_id);
 
     // 根据评论id查找用户id
     @Select("SELECT user_id FROM comment WHERE comment_id = #{commentId} AND is_banned = 0")
     int findUserIdByCommentId(Integer commentId);
 
-    // 假设这里有一个方法可以返回 List<User>
-    // 这里仅作示例，实际需要根据业务逻辑实现
+    /**
+     * 根据评论ID查找用户信息
+     * @param commentId 评论ID
+     * @return 用户信息列表
+     */
     List<User> findUserByCommentId(Integer commentId);
 
     // 发评论
     @Insert("INSERT INTO comment (content, article_id, user_id, like_count, publish_time, star_count, parent_id, is_banned) VALUES (#{content}, #{article_id}, #{user_id}, #{like_count}, #{publish_time}, #{star_count}, #{parent_id}, 0)")
-    int insertComment(Comment comment);
+    int addComment(Comment comment);
 
     // 查询回复自己的评论
     @Select("SELECT * FROM comment " +
@@ -80,11 +83,11 @@ public interface CommentMapper {
             "AND user_id <> #{userId} " +
             "AND is_banned = 0 " +
             "ORDER BY publish_time DESC")
-    List<Comment> findCommentsByUserId(@Param("userId") Integer userId);
+    List<Comment> getCommentsByUserId(Integer userId);
 
     // 根据 comment_id 查找评论
     @Select("SELECT * FROM comment WHERE comment_id = #{commentId} AND is_banned = 0")
-    List<Comment> findCommentByCommentId(@Param("commentId") Integer commentId);
+    List<Comment> findCommentByCommentId(Integer commentId);
 
     // 新增方法：获取所有 is_banned 为 1 的评论数据
     @Select("SELECT * FROM comment WHERE is_banned = 1")

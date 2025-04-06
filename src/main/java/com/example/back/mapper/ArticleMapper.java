@@ -67,5 +67,9 @@ public interface ArticleMapper {
     @Update("UPDATE article SET is_review = 1, is_banned = 1 WHERE article_id = #{articleId};")
     void setReviewedAndBanned(@Param("articleId") Integer articleId);
 
+    // 新增方法：将指定文章的 is_review 设置为 1
+    @Update("UPDATE article SET is_review = 1 WHERE article_id = #{articleId}")
+    void setReviewed(@Param("articleId") Integer articleId);
+
     Object getArticleById(Integer id);
 }

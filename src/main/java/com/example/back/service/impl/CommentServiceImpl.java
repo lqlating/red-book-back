@@ -21,41 +21,42 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getCommentByTime(Integer articleId) {
-        return commentMapper.getCommentByTime(articleId);
+    public List<Comment> getCommentByTime(Integer article_id) {
+        return commentMapper.getCommentByTime(article_id);
     }
 
     @Override
-    public int getReplyCountByCommentId(Integer commentId) {
-        return commentMapper.getReplyCountByCommentId(commentId);
+    public int getReplyCountByCommentId(Integer comment_id) {
+        return commentMapper.getReplyCountByCommentId(comment_id);
     }
 
     @Override
-    public List<Comment> getCommentsByParentId(Integer parentId) {
-        return commentMapper.getCommentsByParentId(parentId);
+    public List<Comment> getCommentsByParentId(Integer parent_id) {
+        return commentMapper.getCommentsByParentId(parent_id);
     }
 
     @Override
-    public int getCommentCountByParentId(Integer parentId) {
-        return commentMapper.getCommentCountByParentId(parentId);
+    public int getCommentCountByParentId(Integer parent_id) {
+        return commentMapper.getCommentCountByParentId(parent_id);
     }
 
     @Override
     public List<User> findUserByCommentId(Integer commentId) {
-        // 假设这里有一个方法可以返回 List<User>
-        // 这里仅作示例，实际需要根据业务逻辑实现
         return commentMapper.findUserByCommentId(commentId);
     }
 
     @Override
     public Result addComment(Comment comment) {
-        commentMapper.insertComment(comment);
-        return Result.success();
+        int result = commentMapper.addComment(comment);
+        if (result > 0) {
+            return Result.success();
+        }
+        return Result.error("Failed to add comment");
     }
 
     @Override
     public List<Comment> getCommentsByUserId(Integer userId) {
-        return commentMapper.findCommentsByUserId(userId);
+        return commentMapper.getCommentsByUserId(userId);
     }
 
     @Override
@@ -63,7 +64,6 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.findCommentByCommentId(commentId);
     }
 
-    // 新增方法：获取所有 is_banned 为 1 的评论数据
     @Override
     public List<Comment> getBannedComments() {
         return commentMapper.getBannedComments();

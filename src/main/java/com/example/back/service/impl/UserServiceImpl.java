@@ -27,6 +27,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void add(User user) {
+        // 验证必填字段
+        if (user.getAccount() == null || user.getAccount().trim().isEmpty()) {
+            throw new IllegalArgumentException("Account is required");
+        }
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            throw new IllegalArgumentException("Password is required");
+        }
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            throw new IllegalArgumentException("Username is required");
+        }
+
+        // 检查账号是否已存在
+        List<User> existingUsers = userMapper.searchByUsername(user.getAccount());
+        if (!existingUsers.isEmpty()) {
+            throw new IllegalArgumentException("Account already exists");
+        }
+
+        // 设置新用户的默认值
+        if (user.getFans() == null) {
+            user.setFans("0");
+        }
+        if (user.getIsBanned() == null) {
+            user.setIsBanned(0);
+        }
+        user.setBanUntil(null);
+        
         userMapper.insert(user);
     }
 
@@ -58,7 +84,7 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             user.setIsBanned(1);
             user.setBanUntil(LocalDateTime.now().plus(10, ChronoUnit.DAYS));
-            userMapper.updateUser(user);
+            userMapper.update(user);
         }
     }
 
@@ -69,7 +95,7 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             user.setIsBanned(0);
             user.setBanUntil(null);
-            userMapper.updateUser(user);
+            userMapper.update(user);
         }
     }
 

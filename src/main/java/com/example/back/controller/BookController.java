@@ -15,6 +15,7 @@ import java.util.Base64;
 import java.util.List;
 
 @RestController
+@RequestMapping("/book")
 public class BookController {
 
     @Autowired
@@ -109,5 +110,43 @@ public class BookController {
     public Result setReviewedAndBanned(@PathVariable Integer bookId) {
         bookService.setReviewedAndBanned(bookId);
         return Result.success("Book set as reviewed and banned successfully");
+    }
+
+    @Operation(summary = "Get unreviewed books", description = "Gets all books with is_review = 0")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved unreviewed books",
+                content = { @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = Book.class)) })
+    })
+    @GetMapping("/unreviewed")
+    public Result getUnreviewedBooks() {
+        List<Book> books = bookService.getUnreviewedBooks();
+        return Result.success(books);
+    }
+
+    @Operation(summary = "Get banned books", description = "Gets all books with is_banned = 1")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved banned books",
+                content = { @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = Book.class)) })
+    })
+    @GetMapping("/banned")
+    public Result getBannedBooks() {
+        List<Book> books = bookService.getBannedBooks();
+        return Result.success(books);
+    }
+
+    @Operation(summary = "Unban a book", description = "Sets the is_banned field of the specified book to 0")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Book unbanned successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Book.class)) }),
+            @ApiResponse(responseCode = "404", description = "Book not found",
+                    content = @Content)
+    })
+    @PutMapping("/unban/{bookId}")
+    public Result unbanBook(@PathVariable Integer bookId) {
+        bookService.unbanBook(bookId);
+        return Result.success("Book unbanned successfully");
     }
 }

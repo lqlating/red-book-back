@@ -9,12 +9,14 @@
         SELECT book_id AS book_id, book_img AS book_img, book_seller_id AS book_seller_id,
                book_price AS book_price, book_writer AS book_writer, book_title AS book_title
         FROM book
+        WHERE is_review = 1 AND is_banned = 0
     </select>
 
     <select id="getBookById" resultType="com.example.back.pojo.Book">
         SELECT book_id AS book_id, book_img AS book_img, book_seller_id AS book_seller_id,
                book_price AS book_price, book_writer AS book_writer, book_title AS book_title
-        FROM book WHERE book_id = #{book_id}
+        FROM book 
+        WHERE book_id = #{book_id} AND is_review = 1 AND is_banned = 0
     </select>
 
     <insert id="addBook">
@@ -33,24 +35,23 @@
         DELETE FROM book WHERE book_id = #{book_id}
     </delete>
 
-    <select id="getBooksByType" parameterType="String" resultType="com.example.back.pojo.Book">
-        SELECT * FROM book WHERE book_type = #{book_type}
+    <select id="getBooksByType" resultType="com.example.back.pojo.Book">
+        SELECT * FROM book 
+        WHERE book_type = #{book_type} AND is_review = 1 AND is_banned = 0
     </select>
 
-    <!-- 新增 SQL 语句 -->
-    <select id="getBooksBySellerId" parameterType="String" resultType="com.example.back.pojo.Book">
-        SELECT *
-        FROM book
-        WHERE book_seller_id = #{book_seller_id}
+    <select id="getBooksBySellerId" resultType="com.example.back.pojo.Book">
+        SELECT * FROM book 
+        WHERE book_seller_id = #{book_seller_id} AND is_review = 1 AND is_banned = 0
     </select>
 
-    <!-- 新增 SQL 语句 -->
-    <select id="getBooksByTitle" parameterType="String" resultType="com.example.back.pojo.Book">
-        SELECT * FROM book WHERE book_title LIKE CONCAT('%', #{title}, '%')
+    <select id="getBooksByTitle" resultType="com.example.back.pojo.Book">
+        SELECT * FROM book 
+        WHERE book_title LIKE CONCAT('%', #{title}, '%') AND is_review = 1 AND is_banned = 0
     </select>
 
-    <!-- 新增 SQL 语句 -->
-    <select id="getBooksByTitleContaining" parameterType="String" resultType="com.example.back.pojo.Book">
-        SELECT * FROM book WHERE book_title LIKE CONCAT('%', #{title}, '%')
+    <select id="getBooksByTitleContaining" resultType="com.example.back.pojo.Book">
+        SELECT * FROM book 
+        WHERE book_title LIKE CONCAT('%', #{title}, '%') AND is_review = 1 AND is_banned = 0
     </select>
 </mapper>

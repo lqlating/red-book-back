@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -19,6 +20,14 @@ public class UserController {
     @GetMapping("/SearchUserById/{id}")
     public Result search(@PathVariable Integer id) {
         List<User> userList = userService.search(id);
+        for (User user : userList) {
+            if (user.getAvatar() != null) {
+                // 将 BLOB 转换为 Base64
+                String base64Avatar = Base64.getEncoder().encodeToString(user.getAvatar());
+                user.setAvatar_base64(base64Avatar);
+                user.setAvatar(null); // 清空 BLOB 数据，避免传输
+            }
+        }
         return Result.success(userList);
     }
 
@@ -30,8 +39,19 @@ public class UserController {
 
     @PostMapping("/NewUser")
     public Result add(@RequestBody User user) {
-        userService.add(user);
-        return Result.success();
+        try {
+            // 处理头像数据
+            if (user.getAvatar_base64() != null && !user.getAvatar_base64().isEmpty()) {
+                user.setAvatar(Base64.getDecoder().decode(user.getAvatar_base64()));
+            }
+            
+            userService.add(user);
+            return Result.success("User created successfully");
+        } catch (IllegalArgumentException e) {
+            return Result.error(e.getMessage());
+        } catch (Exception e) {
+            return Result.error("Failed to create user: " + e.getMessage());
+        }
     }
 
     @PutMapping("/editUser")
@@ -44,6 +64,13 @@ public class UserController {
     @GetMapping("/SearchUserByUsername")
     public Result searchByUsername(@RequestParam String username) {
         List<User> userList = userService.searchByUsername(username);
+        for (User user : userList) {
+            if (user.getAvatar() != null) {
+                String base64Avatar = Base64.getEncoder().encodeToString(user.getAvatar());
+                user.setAvatar_base64(base64Avatar);
+                user.setAvatar(null);
+            }
+        }
         return Result.success(userList);
     }
 
@@ -52,8 +79,12 @@ public class UserController {
         String account = loginRequest.getAccount();
         String password = loginRequest.getPassword();
         User user = userService.verify(password, account);
-        System.out.println("login success");
         if (user != null) {
+            if (user.getAvatar() != null) {
+                String base64Avatar = Base64.getEncoder().encodeToString(user.getAvatar());
+                user.setAvatar_base64(base64Avatar);
+                user.setAvatar(null);
+            }
             return Result.success(user);
         } else {
             return Result.error("密码或者账号错误！请重新输入");
@@ -64,12 +95,14 @@ public class UserController {
     @GetMapping("/getBannedUsers")
     public Result getBannedUsers() {
         List<User> bannedUsers = userService.getBannedUsers();
-
-        if (!bannedUsers.isEmpty()) {
-            return Result.success(bannedUsers);  // 返回用户数据
-        } else {
-            return Result.error("Banned users not found");
+        for (User user : bannedUsers) {
+            if (user.getAvatar() != null) {
+                String base64Avatar = Base64.getEncoder().encodeToString(user.getAvatar());
+                user.setAvatar_base64(base64Avatar);
+                user.setAvatar(null);
+            }
         }
+        return !bannedUsers.isEmpty() ? Result.success(bannedUsers) : Result.error("Banned users not found");
     }
 
     // 新增接口：禁用用户
@@ -92,7 +125,6 @@ public class UserController {
             return Result.error("User ID is required");
         }
         
-        // 获取当前用户信息
         List<User> users = userService.search(request.getId());
         if (users == null || users.isEmpty()) {
             return Result.error("User not found");
@@ -100,9 +132,11 @@ public class UserController {
         
         User user = users.get(0);
         
-        // 只更新非空字段
         if (request.getUsername() != null) user.setUsername(request.getUsername());
-        if (request.getAvatar() != null) user.setAvatar(request.getAvatar());
+        if (request.getAvatar() != null) {
+            // 将 Base64 转换为 byte[]
+            user.setAvatar(Base64.getDecoder().decode(request.getAvatar()));
+        }
         if (request.getEmail() != null) user.setEmail(request.getEmail());
         if (request.getGender() != null) user.setGender(request.getGender());
         if (request.getIntroduction() != null) user.setIntroduction(request.getIntroduction());

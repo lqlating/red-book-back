@@ -1,0 +1,7 @@
+<select id="findUserByCommentId" resultType="com.example.back.pojo.User">
+    SELECT DISTINCT u.*
+    FROM user u
+    INNER JOIN comment c ON u.user_id = c.user_id
+    WHERE c.comment_id = #{commentId}
+    OR c.parent_id = #{commentId}
+</select> 

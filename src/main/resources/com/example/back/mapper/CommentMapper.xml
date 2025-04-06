@@ -6,4 +6,12 @@
     <select id="getCommentById" resultType="com.example.back.pojo.Comment">
         SELECT * FROM comment WHERE comment_id = #{id}
     </select>
+    
+    <!-- 根据评论ID查找用户 -->
+    <select id="findUserByCommentId" resultType="com.example.back.pojo.User">
+        SELECT DISTINCT u.* 
+        FROM user_info u
+        INNER JOIN comment c ON u.id = c.user_id
+        WHERE c.comment_id = #{commentId}
+    </select>
 </mapper> 

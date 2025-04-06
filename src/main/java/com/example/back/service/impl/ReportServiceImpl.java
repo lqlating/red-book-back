@@ -9,6 +9,7 @@ import com.example.back.service.BookService;
 import com.example.back.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -61,15 +62,21 @@ public class ReportServiceImpl implements ReportService {
             if (report == null) continue;
             
             if ("article".equals(contentType)) {
-                report.setAssociatedData(articleService.getArticleById(report.getReportContentId()));
+                report.setAssociated_data(articleService.getArticleById(report.getReport_content_id()));
             } else if ("comment".equals(contentType)) {
-                report.setAssociatedData(commentService.getCommentById(report.getReportContentId()));
+                report.setAssociated_data(commentService.getCommentById(report.getReport_content_id()));
             } else if ("book".equals(contentType)) {
-                report.setAssociatedData(bookService.getBookById(report.getReportContentId()));
+                report.setAssociated_data(bookService.getBookById(report.getReport_content_id()));
             } else if ("user".equals(contentType)) {
-                report.setAssociatedData(userService.getUserById(report.getReportContentId()));
+                report.setAssociated_data(userService.getUserById(report.getReport_content_id()));
             }
         }
         return reports;
+    }
+
+    @Override
+    @Transactional
+    public void addReport(Report report) {
+        reportMapper.insertReport(report);
     }
 }

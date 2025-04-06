@@ -2,6 +2,7 @@ package com.example.back.controller;
 
 import com.example.back.pojo.Report;
 import com.example.back.pojo.Result;
+import com.example.back.pojo.AddReportRequest;
 import com.example.back.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -108,6 +111,33 @@ public class ReportController {
             return Result.success(reports);
         } else {
             return Result.error("Reports not found");
+        }
+    }
+
+    @Operation(summary = "Add a new report", description = "Adds a new report to the database")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Report added successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Report.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content)
+    })
+    @PostMapping("/addReport")
+    public Result addReport(@RequestBody AddReportRequest request) {
+        try {
+            Report report = new Report();
+            report.setReporter_id(request.getReporter_id());
+            report.setReport_reason(request.getReport_reason());
+            report.setContent_type(request.getContent_type());
+            report.setReport_content_id(request.getReport_content_id());
+            
+            System.out.println("Received report data: " + report);
+            
+            reportService.addReport(report);
+            return Result.success("Report added successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("Failed to add report: " + e.getMessage());
         }
     }
 }

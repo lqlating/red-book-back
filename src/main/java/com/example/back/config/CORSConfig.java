@@ -14,11 +14,11 @@ public class CORSConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173") // 添加允许的源
+                .allowedOrigins("http://localhost:5173", "http://localhost:5174") // 添加允许的源
                 .allowCredentials(true)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
 
-        logger.info("CORS configuration applied: Allowed origin - http://localhost:5174");
+        logger.info("CORS configuration applied: Allowed origins - http://localhost:5173, http://localhost:5174");
     }
 }

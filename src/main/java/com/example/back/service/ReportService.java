@@ -10,4 +10,5 @@ public interface ReportService {
     List<Report> getReportsByCommentType();
     List<Report> getReportsByUserType();
     List<Report> getReportsByContentType(String contentType);
+    void addReport(Report report);
 }

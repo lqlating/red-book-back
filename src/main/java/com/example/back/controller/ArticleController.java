@@ -128,7 +128,7 @@ public class ArticleController {
     }
 
     @Operation(summary = "Add a new article", description = "Inserts a new article into the database")
-    @PostMapping("/api/addArticle")
+    @PostMapping("/addArticle")
     public Result addArticle(@RequestBody ArticleRequest articleRequest) {
         // 设置默认值
         articleRequest.setLikeCount(0);
@@ -225,5 +225,19 @@ public class ArticleController {
     public Result setReviewedAndBanned(@PathVariable Integer articleId) {
         articleService.setReviewedAndBanned(articleId);
         return Result.success("Article set as reviewed and banned successfully");
+    }
+
+    @Operation(summary = "Set article as reviewed", description = "Sets the is_review field of the specified article to 1")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Article marked as reviewed successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Article.class)) }),
+            @ApiResponse(responseCode = "404", description = "Article not found",
+                    content = @Content)
+    })
+    @PutMapping("/setReviewed/{articleId}")
+    public Result setReviewed(@PathVariable Integer articleId) {
+        articleService.setReviewed(articleId);
+        return Result.success("Article marked as reviewed successfully");
     }
 }

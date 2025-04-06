@@ -18,10 +18,13 @@
         UPDATE user_info
         <set>
             <if test="username != null">username = #{username},</if>
-            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="avatar != null">avatar = #{avatar,jdbcType=BLOB},</if>
             <if test="email != null">email = #{email},</if>
             <if test="gender != null">gender = #{gender},</if>
             <if test="introduction != null">introduction = #{introduction},</if>
+            <if test="is_banned != null">is_banned = #{is_banned},</if>
+            <if test="ban_until != null">ban_until = #{ban_until},</if>
+            <if test="account != null">account = #{account},</if>
         </set>
         WHERE id = #{id}
     </update>

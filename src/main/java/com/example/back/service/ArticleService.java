@@ -36,4 +36,7 @@ public interface ArticleService {
     void setReviewedAndBanned(Integer articleId);
 
     Object getArticleById(Integer id);
+
+    // 新增方法：将文章标记为已审核
+    void setReviewed(Integer articleId);
 }

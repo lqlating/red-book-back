@@ -11,13 +11,13 @@ import java.util.List;
 public interface CommentService {
     List<Comment> getCommentBylikeCount(Integer article_id);
 
-    List<Comment> getCommentByTime(Integer articleId);
+    List<Comment> getCommentByTime(Integer article_id);
 
-    int getReplyCountByCommentId(Integer commentId);
+    int getReplyCountByCommentId(Integer comment_id);
 
-    List<Comment> getCommentsByParentId(Integer parentId);
+    List<Comment> getCommentsByParentId(Integer parent_id);
 
-    int getCommentCountByParentId(Integer parentId);
+    int getCommentCountByParentId(Integer parent_id);
 
     List<User> findUserByCommentId(Integer commentId);
 
@@ -25,10 +25,8 @@ public interface CommentService {
 
     List<Comment> getCommentsByUserId(Integer userId);
 
-    // 根据 comment_id 查找评论
     List<Comment> findCommentByCommentId(Integer commentId);
 
-    // 新增方法：获取所有 is_banned 为 1 的评论数据
     List<Comment> getBannedComments();
 
     Object getCommentById(Integer id);

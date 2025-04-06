@@ -80,4 +80,9 @@ public class ArticleServiceImpl implements ArticleService {
     public Object getArticleById(Integer id) {
         return articleMapper.getArticleById(id);
     }
+
+    @Override
+    public void setReviewed(Integer articleId) {
+        articleMapper.setReviewed(articleId);
+    }
 }
