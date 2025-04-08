@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
             user.setIsBanned(0);
         }
         user.setBanUntil(null);
-        
+
         userMapper.insert(user);
     }
 

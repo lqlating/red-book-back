@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.back.mapper.ConversationMapper">
+
+    <resultMap id="conversationResultMap" type="com.example.back.pojo.Conversation">
+        <id property="id" column="id"/>
+        <result property="userLowId" column="user_low_id"/>
+        <result property="userHighId" column="user_high_id"/>
+        <result property="lastMessage" column="last_message"/>
+        <result property="lastMessageTime" column="last_message_time"/>
+        <result property="userLowUnread" column="user_low_unread"/>
+        <result property="userHighUnread" column="user_high_unread"/>
+    </resultMap>
+
+    <select id="getConversationsByUserId" resultType="com.example.back.pojo.Conversation">
+        SELECT * FROM conversations WHERE user_low_id = #{userId} OR user_high_id = #{userId} ORDER BY last_message_time DESC
+    </select>
+
+    <select id="getConversationByUserIds" resultType="com.example.back.pojo.Conversation">
+        SELECT * FROM conversations WHERE user_low_id = #{userLowId} AND user_high_id = #{userHighId}
+    </select>
+
+    <insert id="createConversation" parameterType="com.example.back.pojo.Conversation" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO conversations (user_low_id, user_high_id, last_message, last_message_time, user_low_unread, user_high_unread)
+        VALUES (#{userLowId}, #{userHighId}, #{lastMessage}, #{lastMessageTime}, #{userLowUnread}, #{userHighUnread})
+    </insert>
+
+    <update id="updateLastMessage" parameterType="com.example.back.pojo.Conversation">
+        UPDATE conversations 
+        SET last_message = #{lastMessage}, 
+            last_message_time = #{lastMessageTime} 
+        WHERE id = #{id}
+    </update>
+
+    <update id="incrementLowUnread">
+        UPDATE conversations SET user_low_unread = user_low_unread + 1 
+        WHERE id = #{id}
+    </update>
+
+    <update id="incrementHighUnread">
+        UPDATE conversations SET user_high_unread = user_high_unread + 1 
+        WHERE id = #{id}
+    </update>
+
+    <update id="clearLowUnread">
+        UPDATE conversations SET user_low_unread = 0 
+        WHERE id = #{id}
+    </update>
+
+    <update id="clearHighUnread">
+        UPDATE conversations SET user_high_unread = 0 
+        WHERE id = #{id}
+    </update>
+</mapper> 

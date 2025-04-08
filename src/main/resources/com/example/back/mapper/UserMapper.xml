@@ -28,8 +28,4 @@
         </set>
         WHERE id = #{id}
     </update>
-
-    <select id="getUserById" resultType="com.example.back.pojo.User">
-        SELECT * FROM user_info WHERE id = #{id}
-    </select>
 </mapper>

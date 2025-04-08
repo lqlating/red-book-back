@@ -17,16 +17,16 @@ import java.util.List;
 public class ReportServiceImpl implements ReportService {
     @Autowired
     private ReportMapper reportMapper;
-    
+
     @Autowired
     private ArticleService articleService;  // 注入ArticleService
-    
+
     @Autowired
     private CommentService commentService;  // 注入CommentService
-    
+
     @Autowired
     private BookService bookService;        // 注入BookService
-    
+
     @Autowired
     private UserService userService;        // 注入UserService
 
@@ -56,11 +56,11 @@ public class ReportServiceImpl implements ReportService {
         if (reports == null || reports.isEmpty()) {
             return reports;
         }
-        
+
         // 根据 contentType 查询关联表中的数据
         for (Report report : reports) {
             if (report == null) continue;
-            
+
             if ("article".equals(contentType)) {
                 report.setAssociated_data(articleService.getArticleById(report.getReport_content_id()));
             } else if ("comment".equals(contentType)) {

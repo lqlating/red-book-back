@@ -25,5 +25,5 @@ public interface UserMapper {
 
     List<User> getBannedUsers();
 
-    Object getUserById(Integer id);
+    User getUserById(@Param("id") Integer id);
 }
