@@ -25,7 +25,7 @@ public interface BookService {
     List<Book> getBooksByTitleContaining(String title);
 
     // 新增方法：将指定书籍的 is_review 和 is_banned 设置为 1
-    void setReviewedAndBanned(Integer bookId);
+    void setReviewedAndBanned(Integer book_id);
 
     // 新增方法：获取所有待审核的书籍
     List<Book> getUnreviewedBooks();
@@ -34,5 +34,8 @@ public interface BookService {
     List<Book> getBannedBooks();
 
     // 新增方法：解禁书籍
-    void unbanBook(Integer bookId);
+    void unbanBook(Integer book_id);
+
+    // 新增方法：将指定书籍的 is_review 设置为 1（标记为已审核）
+    void setReviewed(Integer book_id);
 }

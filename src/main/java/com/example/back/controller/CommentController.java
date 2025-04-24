@@ -4,6 +4,7 @@ import com.example.back.pojo.Comment;
 import com.example.back.pojo.Result;
 import com.example.back.pojo.User;
 import com.example.back.service.CommentService;
+import com.example.back.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,6 +21,9 @@ import java.util.List;
 public class CommentController {
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private ReportService reportService;
 
     @Operation(summary = "根据喜欢的数量获取评论", description = "返回指定文章ID的评论列表，按喜欢数量降序排列，且 is_banned = 0")
     @ApiResponses(value = {
@@ -182,6 +186,52 @@ public class CommentController {
             return Result.success(bannedComments);  // 返回评论数据
         } else {
             return Result.error("Banned comments not found");
+        }
+    }
+
+    // 新增接口：解除评论的禁止状态
+    @Operation(summary = "解除评论的禁止状态", description = "将指定评论ID的评论 is_banned 设置为 0，并从report表中删除相关举报")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "评论已解禁",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Result.class)) }),
+            @ApiResponse(responseCode = "400", description = "操作失败",
+                    content = @Content)
+    })
+    @PutMapping("/unbanComment/{commentId}")
+    public Result unbanComment(@PathVariable Integer commentId) {
+        // 1. 解除评论的禁止状态
+        boolean success = commentService.unbanCommentById(commentId);
+        
+        if (success) {
+            try {
+                // 2. 从report表中删除相关举报数据
+                reportService.deleteReportByContentTypeAndId("comment", commentId);
+                return Result.success("Comment unbanned successfully and related reports deleted");
+            } catch (Exception e) {
+                return Result.success("Comment unbanned successfully but failed to delete related reports");
+            }
+        } else {
+            return Result.error("Failed to unban comment");
+        }
+    }
+
+    // 新增接口：将评论设为禁止状态
+    @Operation(summary = "将评论设为禁止状态", description = "将指定评论ID的评论 is_banned 设置为 1")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "评论已禁止",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Result.class)) }),
+            @ApiResponse(responseCode = "400", description = "操作失败",
+                    content = @Content)
+    })
+    @PutMapping("/banComment/{commentId}")
+    public Result banComment(@PathVariable Integer commentId) {
+        boolean success = commentService.banCommentById(commentId);
+        if (success) {
+            return Result.success("Comment banned successfully");
+        } else {
+            return Result.error("Failed to ban comment");
         }
     }
 }

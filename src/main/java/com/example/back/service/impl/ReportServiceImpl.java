@@ -79,4 +79,24 @@ public class ReportServiceImpl implements ReportService {
     public void addReport(Report report) {
         reportMapper.insertReport(report);
     }
+    
+    @Override
+    @Transactional
+    public boolean deleteReportById(Integer reportId) {
+        if (reportId == null) {
+            return false;
+        }
+        int result = reportMapper.deleteReportById(reportId);
+        return result > 0;
+    }
+    
+    @Override
+    @Transactional
+    public boolean deleteReportByContentTypeAndId(String contentType, Integer contentId) {
+        if (contentType == null || contentId == null) {
+            return false;
+        }
+        int result = reportMapper.deleteReportByContentTypeAndId(contentType, contentId);
+        return result > 0;
+    }
 }

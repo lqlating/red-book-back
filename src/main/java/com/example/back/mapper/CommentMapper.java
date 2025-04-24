@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -92,6 +93,14 @@ public interface CommentMapper {
     // 新增方法：获取所有 is_banned 为 1 的评论数据
     @Select("SELECT * FROM comment WHERE is_banned = 1")
     List<Comment> getBannedComments();
+    
+    // 新增方法：将评论设为禁止状态
+    @Update("UPDATE comment SET is_banned = 1 WHERE comment_id = #{commentId}")
+    int banCommentById(@Param("commentId") Integer commentId);
+    
+    // 新增方法：解除评论的禁止状态
+    @Update("UPDATE comment SET is_banned = 0 WHERE comment_id = #{commentId}")
+    int unbanCommentById(@Param("commentId") Integer commentId);
 
     Object getCommentById(Integer id);
 }

@@ -3,6 +3,7 @@ package com.example.back.controller;
 import com.example.back.pojo.Book;
 import com.example.back.pojo.Result;
 import com.example.back.service.BookService;
+import com.example.back.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,6 +21,9 @@ public class BookController {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private ReportService reportService;
 
     @GetMapping("/list")
     public Result listBooks() {
@@ -106,9 +110,9 @@ public class BookController {
             @ApiResponse(responseCode = "404", description = "Book not found",
                     content = @Content)
     })
-    @PutMapping("/setReviewedAndBanned/{bookId}")
-    public Result setReviewedAndBanned(@PathVariable Integer bookId) {
-        bookService.setReviewedAndBanned(bookId);
+    @PutMapping("/setReviewedAndBanned/{book_id}")
+    public Result setReviewedAndBanned(@PathVariable Integer book_id) {
+        bookService.setReviewedAndBanned(book_id);
         return Result.success("Book set as reviewed and banned successfully");
     }
 
@@ -136,7 +140,7 @@ public class BookController {
         return Result.success(books);
     }
 
-    @Operation(summary = "Unban a book", description = "Sets the is_banned field of the specified book to 0")
+    @Operation(summary = "Unban a book", description = "Sets the is_banned field of the specified book to 0, is_review to 1, and removes related reports")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Book unbanned successfully",
                     content = { @Content(mediaType = "application/json",
@@ -144,9 +148,21 @@ public class BookController {
             @ApiResponse(responseCode = "404", description = "Book not found",
                     content = @Content)
     })
-    @PutMapping("/unban/{bookId}")
-    public Result unbanBook(@PathVariable Integer bookId) {
-        bookService.unbanBook(bookId);
-        return Result.success("Book unbanned successfully");
+    @PutMapping("/unban/{book_id}")
+    public Result unbanBook(@PathVariable Integer book_id) {
+        try {
+            // 1. 解封书籍
+            bookService.unbanBook(book_id);
+            
+            // 确保书籍已被审核 (is_review = 1)
+            bookService.setReviewed(book_id);
+            
+            // 2. 从report表中删除相关举报数据
+            reportService.deleteReportByContentTypeAndId("book", book_id);
+            
+            return Result.success("Book unbanned successfully and related reports deleted");
+        } catch (Exception e) {
+            return Result.error("Failed to unban book: " + e.getMessage());
+        }
     }
 }

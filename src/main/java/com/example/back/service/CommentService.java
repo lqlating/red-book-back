@@ -29,5 +29,19 @@ public interface CommentService {
 
     List<Comment> getBannedComments();
 
+    /**
+     * 将评论设为禁止状态
+     * @param commentId 评论ID
+     * @return 成功返回true，失败返回false
+     */
+    boolean banCommentById(Integer commentId);
+
+    /**
+     * 解除评论的禁止状态
+     * @param commentId 评论ID
+     * @return 成功返回true，失败返回false
+     */
+    boolean unbanCommentById(Integer commentId);
+
     Object getCommentById(Integer id);
 }

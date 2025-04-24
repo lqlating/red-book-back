@@ -39,4 +39,7 @@ public interface ArticleService {
 
     // 新增方法：将文章标记为已审核
     void setReviewed(Integer articleId);
+
+    // 新增方法：将指定文章的 is_banned 设置为 0（解封文章）
+    void unbanArticle(Integer articleId);
 }

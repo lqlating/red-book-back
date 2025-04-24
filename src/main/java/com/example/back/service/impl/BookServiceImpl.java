@@ -78,8 +78,8 @@ public class BookServiceImpl implements BookService {
 
     // 新增方法：将指定书籍的 is_review 和 is_banned 设置为 1
     @Override
-    public void setReviewedAndBanned(Integer bookId) {
-        bookMapper.setReviewedAndBanned(bookId);
+    public void setReviewedAndBanned(Integer book_id) {
+        bookMapper.setReviewedAndBanned(book_id);
     }
 
     @Override
@@ -109,7 +109,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void unbanBook(Integer bookId) {
-        bookMapper.unbanBook(bookId);
+    public void unbanBook(Integer book_id) {
+        bookMapper.unbanBook(book_id);
+    }
+
+    @Override
+    public void setReviewed(Integer book_id) {
+        bookMapper.setReviewed(book_id);
     }
 }

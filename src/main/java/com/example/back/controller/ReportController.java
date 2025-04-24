@@ -12,8 +12,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -24,7 +26,7 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-    @Operation(summary = "Get reports by article type", description = "Returns a list of reports with report_type = 'article'")
+    @Operation(summary = "Get reports by article type", description = "Returns a list of reports with content_type = 'article'")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Reports retrieved successfully",
                     content = { @Content(mediaType = "application/json",
@@ -42,7 +44,7 @@ public class ReportController {
         }
     }
 
-    @Operation(summary = "Get reports by book type", description = "Returns a list of reports with report_type = 'book'")
+    @Operation(summary = "Get reports by book type", description = "Returns a list of reports with content_type = 'book'")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Reports retrieved successfully",
                     content = { @Content(mediaType = "application/json",
@@ -60,7 +62,7 @@ public class ReportController {
         }
     }
 
-    @Operation(summary = "Get reports by comment type", description = "Returns a list of reports with report_type = 'comment'")
+    @Operation(summary = "Get reports by comment type", description = "Returns a list of reports with content_type = 'comment'")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Reports retrieved successfully",
                     content = { @Content(mediaType = "application/json",
@@ -78,7 +80,7 @@ public class ReportController {
         }
     }
 
-    @Operation(summary = "Get reports by user type", description = "Returns a list of reports with report_type = 'user'")
+    @Operation(summary = "Get reports by user type", description = "Returns a list of reports with content_type = 'user'")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Reports retrieved successfully",
                     content = { @Content(mediaType = "application/json",
@@ -138,6 +140,24 @@ public class ReportController {
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error("Failed to add report: " + e.getMessage());
+        }
+    }
+    
+    @Operation(summary = "Delete a report", description = "Deletes a report with the specified ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Report deleted successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Result.class)) }),
+            @ApiResponse(responseCode = "404", description = "Report not found",
+                    content = @Content)
+    })
+    @DeleteMapping("/deleteReport/{reportId}")
+    public Result deleteReport(@PathVariable Integer reportId) {
+        boolean success = reportService.deleteReportById(reportId);
+        if (success) {
+            return Result.success("Report deleted successfully");
+        } else {
+            return Result.error("Failed to delete report or report not found");
         }
     }
 }

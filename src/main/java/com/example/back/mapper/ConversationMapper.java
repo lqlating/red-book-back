@@ -7,29 +7,62 @@ import java.util.List;
 
 @Mapper
 public interface ConversationMapper {
-    @Select("SELECT * FROM conversations WHERE user_low_id = #{user_id} OR user_high_id = #{user_id} ORDER BY last_message_time DESC")
-    List<Conversation> get_conversations_by_user_id(@Param("user_id") Integer user_id);
+    /**
+     * 获取用户的所有会话
+     * @param userId 用户ID
+     * @return 会话列表
+     */
+    List<Conversation> get_conversations_by_user_id(@Param("userId") Long userId);
 
-    @Select("SELECT * FROM conversations WHERE user_low_id = #{user_low_id} AND user_high_id = #{user_high_id}")
-    Conversation get_conversation_by_user_ids(@Param("user_low_id") Integer user_low_id, @Param("user_high_id") Integer user_high_id);
+    /**
+     * 根据两个用户ID获取会话
+     * @param userLowId 较小的用户ID
+     * @param userHighId 较大的用户ID
+     * @return 会话信息
+     */
+    Conversation get_conversation_by_user_ids(@Param("userLowId") Long userLowId, 
+                                         @Param("userHighId") Long userHighId);
 
-    @Insert("INSERT INTO conversations (user_low_id, user_high_id, last_message, last_message_time, low_unread, high_unread) " +
-            "VALUES (#{user_low_id}, #{user_high_id}, #{last_message}, #{last_message_time}, #{low_unread}, #{high_unread})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
+    /**
+     * 根据会话ID获取会话
+     * @param conversationId 会话ID
+     * @return 会话信息
+     */
+    Conversation get_conversation_by_id(@Param("conversationId") Long conversationId);
+
+    /**
+     * 创建新会话
+     * @param conversation 会话信息
+     */
     void create_conversation(Conversation conversation);
 
-    @Update("UPDATE conversations SET last_message = #{last_message}, last_message_time = #{last_message_time} WHERE id = #{id}")
+    /**
+     * 更新会话的最后消息
+     * @param conversation 会话信息
+     */
     void update_last_message(Conversation conversation);
 
-    @Update("UPDATE conversations SET low_unread = low_unread + 1 WHERE id = #{id}")
-    void increment_low_unread(@Param("id") Integer id);
+    /**
+     * 增加低ID用户的未读消息数
+     * @param conversationId 会话ID
+     */
+    void increment_low_unread(@Param("conversationId") Long conversationId);
 
-    @Update("UPDATE conversations SET high_unread = high_unread + 1 WHERE id = #{id}")
-    void increment_high_unread(@Param("id") Integer id);
+    /**
+     * 增加高ID用户的未读消息数
+     * @param conversationId 会话ID
+     */
+    void increment_high_unread(@Param("conversationId") Long conversationId);
 
-    @Update("UPDATE conversations SET low_unread = 0 WHERE id = #{id}")
-    void clear_low_unread(@Param("id") Integer id);
+    /**
+     * 清空低ID用户的未读消息数
+     * @param conversationId 会话ID
+     */
+    void clear_low_unread(@Param("conversationId") Long conversationId);
 
-    @Update("UPDATE conversations SET high_unread = 0 WHERE id = #{id}")
-    void clear_high_unread(@Param("id") Integer id);
+    /**
+     * 清空高ID用户的未读消息数
+     * @param conversationId 会话ID
+     */
+    void clear_high_unread(@Param("conversationId") Long conversationId);
 } 

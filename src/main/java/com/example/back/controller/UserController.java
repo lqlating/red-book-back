@@ -107,16 +107,16 @@ public class UserController {
 
     // 新增接口：禁用用户
     @PostMapping("/banUser")
-    public Result banUser(@RequestParam Integer userId) {
-        userService.banUser(userId);
-        return Result.success("User banned successfully");
+    public Result banUser(@RequestParam Integer userId, @RequestParam(defaultValue = "7") Integer banDays) {
+        userService.banUser(userId, banDays);
+        return Result.success("User banned successfully for " + banDays + " days");
     }
 
     // 新增接口：解封用户
     @PostMapping("/unbanUser")
     public Result unbanUser(@RequestParam Integer userId) {
         userService.unbanUser(userId);
-        return Result.success("User unbanned successfully");
+        return Result.success("User unbanned successfully and ban period cleared");
     }
 
     @PutMapping("/updateUserInfo")
@@ -143,5 +143,12 @@ public class UserController {
         
         userService.update(user);
         return Result.success();
+    }
+
+    // 获取用户订阅列表
+    @GetMapping("/getSubscriptions/{userId}")
+    public Result getSubscriptions(@PathVariable Integer userId) {
+        List<Integer> subscriptions = userService.getSubscriptions(userId);
+        return Result.success(subscriptions);
     }
 }

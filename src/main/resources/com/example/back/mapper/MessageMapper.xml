@@ -8,8 +8,9 @@
         <id property="id" column="id"/>
         <result property="conversation_id" column="conversation_id"/>
         <result property="sender_id" column="sender_id"/>
-        <result property="content" column="content"/>
-        <result property="image_url" column="image_url"/>
+        <result property="content_text" column="content_text"/>
+        <result property="content_image" column="content_image"/>
+        <result property="message_type" column="message_type"/>
         <result property="created_at" column="created_at"/>
         <result property="is_read" column="is_read"/>
         <association property="sender" javaType="com.example.back.pojo.User">
@@ -24,26 +25,36 @@
         FROM messages m 
         LEFT JOIN user_info u ON m.sender_id = u.id 
         WHERE m.conversation_id = #{conversation_id} 
-        ORDER BY m.created_at DESC 
+        ORDER BY m.created_at ASC 
         LIMIT #{offset}, #{page_size}
     </select>
 
-    <insert id="createMessage" parameterType="com.example.back.pojo.Message" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO messages (conversation_id, sender_id, content_text, content_image, message_type)
-        VALUES (#{conversationId}, #{senderId}, #{contentText}, #{contentImage}, #{messageType})
+    <insert id="create_message" parameterType="com.example.back.pojo.Message" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO messages (conversation_id, sender_id, content_text, content_image, message_type, created_at, is_read)
+        VALUES (#{conversation_id}, #{sender_id}, #{content_text}, #{content_image}, #{message_type}, #{created_at}, #{is_read})
     </insert>
 
-    <update id="markMessagesAsRead">
+    <update id="mark_messages_as_read">
         UPDATE messages 
         SET is_read = TRUE 
-        WHERE conversation_id = #{conversationId} AND sender_id != #{readerId}
+        WHERE conversation_id = #{conversation_id} AND sender_id != #{reader_id}
     </update>
 
-    <select id="getUnreadCount" resultType="java.lang.Integer">
+    <select id="get_unread_count" resultType="java.lang.Integer">
         SELECT COUNT(*) 
         FROM messages 
-        WHERE conversation_id = #{conversationId} 
-        AND sender_id != #{userId} 
+        WHERE conversation_id = #{conversation_id} 
+        AND sender_id != #{user_id} 
         AND is_read = FALSE
     </select>
+
+    <select id="get_latest_message" resultMap="message_result_map">
+        SELECT m.*, u.username, u.avatar 
+        FROM messages m 
+        LEFT JOIN user_info u ON m.sender_id = u.id 
+        WHERE m.conversation_id = #{conversation_id} 
+        ORDER BY m.created_at DESC 
+        LIMIT 1
+    </select>
+
 </mapper> 

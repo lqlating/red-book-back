@@ -85,4 +85,10 @@ public class ArticleServiceImpl implements ArticleService {
     public void setReviewed(Integer articleId) {
         articleMapper.setReviewed(articleId);
     }
+
+    // 实现解封文章的方法
+    @Override
+    public void unbanArticle(Integer articleId) {
+        articleMapper.unbanArticle(articleId);
+    }
 }

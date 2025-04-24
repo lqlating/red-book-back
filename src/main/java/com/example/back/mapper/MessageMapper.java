@@ -11,20 +11,13 @@ public interface MessageMapper {
                                                 @Param("offset") Integer offset, 
                                                 @Param("page_size") Integer page_size);
 
-    @Insert("INSERT INTO messages (conversation_id, sender_id, content, image_url, created_at, is_read) " +
-            "VALUES (#{conversation_id}, #{sender_id}, #{content}, #{image_url}, #{created_at}, #{is_read})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
     void create_message(Message message);
 
-    @Update("UPDATE messages SET is_read = true " +
-            "WHERE conversation_id = #{conversation_id} AND sender_id != #{reader_id}")
     void mark_messages_as_read(@Param("conversation_id") Integer conversation_id, 
                              @Param("reader_id") Integer reader_id);
 
-    @Select("SELECT COUNT(*) FROM messages " +
-            "WHERE conversation_id = #{conversation_id} " +
-            "AND sender_id != #{user_id} " +
-            "AND is_read = false")
     Integer get_unread_count(@Param("conversation_id") Integer conversation_id, 
                            @Param("user_id") Integer user_id);
+
+    Message get_latest_message(@Param("conversation_id") Integer conversation_id);
 } 

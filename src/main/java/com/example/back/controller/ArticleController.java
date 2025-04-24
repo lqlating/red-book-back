@@ -4,6 +4,7 @@ import com.example.back.pojo.Article;
 import com.example.back.pojo.ArticleRequest;
 import com.example.back.pojo.Result;
 import com.example.back.service.ArticleService;
+import com.example.back.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,6 +23,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private ReportService reportService;
 
     @Operation(summary = "Filter content based on type", description = "Returns a list of articles filtered by type, is_review = 1, and is_banned = 0")
     @ApiResponses(value = {
@@ -239,5 +243,32 @@ public class ArticleController {
     public Result setReviewed(@PathVariable Integer articleId) {
         articleService.setReviewed(articleId);
         return Result.success("Article marked as reviewed successfully");
+    }
+
+    // 新增接口：将指定文章的 is_banned 设置为 0（解封文章）
+    @Operation(summary = "Unban an article", description = "Sets the is_banned field of the specified article to 0 and removes related reports")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Article unbanned successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Article.class)) }),
+            @ApiResponse(responseCode = "404", description = "Article not found",
+                    content = @Content)
+    })
+    @PutMapping("/unbanArticle/{articleId}")
+    public Result unbanArticle(@PathVariable Integer articleId) {
+        try {
+            // 1. 解封文章
+            articleService.unbanArticle(articleId);
+            
+            // 确保文章已被审核 (is_review = 1)
+            articleService.setReviewed(articleId);
+            
+            // 2. 从report表中删除相关举报数据
+            reportService.deleteReportByContentTypeAndId("article", articleId);
+            
+            return Result.success("Article unbanned successfully and related reports deleted");
+        } catch (Exception e) {
+            return Result.error("Failed to unban article: " + e.getMessage());
+        }
     }
 }

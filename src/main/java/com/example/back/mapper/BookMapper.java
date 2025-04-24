@@ -33,8 +33,8 @@ public interface BookMapper {
     List<Book> getBooksByTitleContaining(@Param("title") String title);
 
     // 新增方法：将指定书籍的 is_review 和 is_banned 设置为 1
-    @Update("UPDATE book SET is_review = 1, is_banned = 1 WHERE book_id = #{bookId};")
-    void setReviewedAndBanned(@Param("bookId") Integer bookId);
+    @Update("UPDATE book SET is_review = 1, is_banned = 1 WHERE book_id = #{book_id};")
+    void setReviewedAndBanned(@Param("book_id") Integer book_id);
 
     // 新增方法：获取所有待审核的书籍（is_review = 0）
     @Select("SELECT * FROM book WHERE is_review = 0")
@@ -49,6 +49,10 @@ public interface BookMapper {
     List<Book> searchBooksByTitle(@Param("title") String title);
 
     // 新增方法：将指定书籍的 is_banned 设置为 0（解禁）
-    @Update("UPDATE book SET is_banned = 0 WHERE book_id = #{bookId}")
-    void unbanBook(@Param("bookId") Integer bookId);
+    @Update("UPDATE book SET is_banned = 0 WHERE book_id = #{book_id}")
+    void unbanBook(@Param("book_id") Integer book_id);
+
+    // 新增方法：将指定书籍的 is_review 设置为 1（标记为已审核）
+    @Update("UPDATE book SET is_review = 1 WHERE book_id = #{book_id}")
+    void setReviewed(@Param("book_id") Integer book_id);
 }

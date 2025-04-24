@@ -5,19 +5,19 @@
 
 <mapper namespace="com.example.back.mapper.ReportMapper">
     <select id="getReportsByArticleType" resultType="com.example.back.pojo.Report">
-        SELECT * FROM report WHERE report_type = 'article'
+        SELECT * FROM report WHERE content_type = 'article'
     </select>
 
     <select id="getReportsByBookType" resultType="com.example.back.pojo.Report">
-        SELECT * FROM report WHERE report_type = 'book'
+        SELECT * FROM report WHERE content_type = 'book'
     </select>
 
     <select id="getReportsByCommentType" resultType="com.example.back.pojo.Report">
-        SELECT * FROM report WHERE report_type = 'comment'
+        SELECT * FROM report WHERE content_type = 'comment'
     </select>
 
     <select id="getReportsByUserType" resultType="com.example.back.pojo.Report">
-        SELECT * FROM report WHERE report_type = 'user'
+        SELECT * FROM report WHERE content_type = 'user'
     </select>
 
     <resultMap id="ReportResultMap" type="com.example.back.pojo.Report">

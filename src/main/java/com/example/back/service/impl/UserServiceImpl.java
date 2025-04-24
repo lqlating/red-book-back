@@ -79,11 +79,12 @@ public class UserServiceImpl implements UserService {
 
     // 新增方法：禁用用户
     @Override
-    public void banUser(Integer userId) {
+    public void banUser(Integer userId, Integer banDays) {
         User user = userMapper.search(userId).stream().findFirst().orElse(null);
         if (user != null) {
             user.setIsBanned(1);
-            user.setBanUntil(LocalDateTime.now().plus(10, ChronoUnit.DAYS));
+            // 设置封禁结束时间为当前时间加上指定的天数
+            user.setBanUntil(LocalDateTime.now().plus(banDays, ChronoUnit.DAYS));
             userMapper.update(user);
         }
     }
@@ -102,5 +103,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Object getUserById(Integer id) {
         return userMapper.getUserById(id);
+    }
+
+    @Override
+    public List<Integer> getSubscriptions(Integer userId) {
+        return userMapper.getSubscriptions(userId);
     }
 }

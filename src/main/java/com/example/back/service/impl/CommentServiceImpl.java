@@ -70,6 +70,24 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public boolean banCommentById(Integer commentId) {
+        if (commentId == null) {
+            return false;
+        }
+        int result = commentMapper.banCommentById(commentId);
+        return result > 0;
+    }
+
+    @Override
+    public boolean unbanCommentById(Integer commentId) {
+        if (commentId == null) {
+            return false;
+        }
+        int result = commentMapper.unbanCommentById(commentId);
+        return result > 0;
+    }
+
+    @Override
     public Object getCommentById(Integer id) {
         return commentMapper.getCommentById(id);
     }

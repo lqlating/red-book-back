@@ -4,13 +4,34 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.back.mapper.UserMapper">
 
+    <select id="search" resultType="com.example.back.pojo.User">
+        SELECT * FROM user_info WHERE id = #{id}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM user_info WHERE id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.back.pojo.User">
+        INSERT INTO user_info (username, password, avatar, email, id, ban_until, is_banned, account, gender, introduction) 
+        VALUES (#{username}, #{password}, #{avatar}, #{email}, #{id}, #{ban_until}, #{is_banned}, #{account}, #{gender}, #{introduction})
+    </insert>
+
     <select id="verify" resultType="com.example.back.pojo.User">
-        SELECT * FROM user_info WHERE account = #{account} AND password = #{password}
+        SELECT * FROM user_info WHERE account = #{param2} AND password = #{param1}
+    </select>
+
+    <select id="searchByUsername" resultType="com.example.back.pojo.User">
+        SELECT * FROM user_info WHERE username LIKE CONCAT('%', #{username}, '%')
     </select>
 
     <!-- 新增 SQL 语句：获取所有 is_banned 为 1 的用户数据 -->
     <select id="getBannedUsers" resultType="com.example.back.pojo.User">
         SELECT * FROM user_info WHERE is_banned = 1;
+    </select>
+
+    <select id="getUserById" resultType="com.example.back.pojo.User">
+        SELECT * FROM user_info WHERE id = #{id}
     </select>
 
     <!-- 新增 SQL 语句：更新用户信息 -->
@@ -28,4 +49,11 @@
         </set>
         WHERE id = #{id}
     </update>
+
+    <!-- Get user subscriptions -->
+    <select id="getSubscriptions" resultType="java.lang.Integer">
+        SELECT target_id
+        FROM subscript
+        WHERE user_id = #{userId}
+    </select>
 </mapper>

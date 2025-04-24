@@ -22,14 +22,17 @@ public interface UserService {
 
     List<User> searchByUsername(String username);
 
-    // 新增方法：获取所有 is_banned 为 1 的用户数据
+    // 新增方法：获取所有被禁用的用户
     List<User> getBannedUsers();
 
     // 新增方法：禁用用户
-    void banUser(Integer userId);
+    void banUser(Integer userId, Integer banDays);
 
     // 新增方法：解封用户
     void unbanUser(Integer userId);
 
     Object getUserById(Integer id);
+
+    // 获取用户订阅列表
+    List<Integer> getSubscriptions(Integer userId);
 }
