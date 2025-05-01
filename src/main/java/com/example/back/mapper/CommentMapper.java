@@ -102,5 +102,8 @@ public interface CommentMapper {
     @Update("UPDATE comment SET is_banned = 0 WHERE comment_id = #{commentId}")
     int unbanCommentById(@Param("commentId") Integer commentId);
 
+    // 删除评论
+    int deleteComment(@Param("comment_id") Integer comment_id);
+
     Object getCommentById(Integer id);
 }

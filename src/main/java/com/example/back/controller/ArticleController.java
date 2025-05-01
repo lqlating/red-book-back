@@ -50,6 +50,29 @@ public class ArticleController {
         return Result.success(articleList);  // 返回带有 Base64 图片的文章列表
     }
 
+    @Operation(summary = "Filter content based on type excluding an author", description = "Returns a list of articles filtered by type, is_review = 1, is_banned = 0, and author_id not equal to the specified id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Articles retrieved successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Article.class)) }),
+            @ApiResponse(responseCode = "404", description = "Articles not found",
+                    content = @Content)
+    })
+    @GetMapping("/FilterContent/{type}/{id}")
+    public Result listExcludeAuthor(@PathVariable String type, @PathVariable Integer id) {
+        List<Article> articleList = articleService.listExcludeAuthor(type, id);
+        // 对于每篇文章，将 BLOB 格式的图片转换为 Base64 格式的字符串
+        for (Article article : articleList) {
+            if (article.getImg() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(article.getImg());
+                article.setImg_url(base64Image);  // 设置 Base64 图片数据
+                article.setImg(null);  // 清空 BLOB 数据，避免返回
+            }
+        }
+
+        return Result.success(articleList);  // 返回带有 Base64 图片的文章列表
+    }
+
     @Operation(summary = "Add like to an article", description = "Increases the like count for the specified article")
     @PostMapping("/addLike/{articleID}")
     public void addLike(@PathVariable Integer articleID) {
@@ -98,6 +121,23 @@ public class ArticleController {
     @GetMapping("/SearchArticle")
     public Result searchByTitleOrContent(@RequestParam String keyword) {
         List<Article> articles = articleService.searchByTitleOrContent(keyword);
+
+        // 转换图片为 Base64
+        for (Article article : articles) {
+            if (article.getImg() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(article.getImg());
+                article.setImg_url(base64Image);
+                article.setImg(null);
+            }
+        }
+
+        return Result.success(articles);
+    }
+
+    @Operation(summary = "Search articles by title or content excluding an author", description = "Searches for articles whose title or content contains the specified keyword and author_id not equal to the specified id")
+    @GetMapping("/SearchArticle/{id}")
+    public Result searchByTitleOrContentExcludeAuthor(@RequestParam String keyword, @PathVariable Integer id) {
+        List<Article> articles = articleService.searchByTitleOrContentExcludeAuthor(keyword, id);
 
         // 转换图片为 Base64
         for (Article article : articles) {
@@ -269,6 +309,24 @@ public class ArticleController {
             return Result.success("Article unbanned successfully and related reports deleted");
         } catch (Exception e) {
             return Result.error("Failed to unban article: " + e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Delete an article", description = "Deletes an article with the specified ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Article deleted successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Result.class)) }),
+            @ApiResponse(responseCode = "404", description = "Article not found",
+                    content = @Content)
+    })
+    @DeleteMapping("/deleteArticle/{article_id}")
+    public Result deleteArticle(@PathVariable Integer article_id) {
+        try {
+            articleService.deleteArticle(article_id);
+            return Result.success("Article deleted successfully");
+        } catch (Exception e) {
+            return Result.error("Failed to delete article: " + e.getMessage());
         }
     }
 }

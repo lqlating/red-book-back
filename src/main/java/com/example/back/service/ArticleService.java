@@ -10,6 +10,9 @@ import java.util.List;
 public interface ArticleService {
     List<Article> list(String type);
 
+    // 新增：获取指定类型且作者ID不等于指定ID的文章
+    List<Article> listExcludeAuthor(String type, Integer id);
+
     void addLike(Integer articleId);
 
     void subLike(Integer articleID);
@@ -21,6 +24,9 @@ public interface ArticleService {
     List<Article> getArticlesByIds(List<Integer> articleIds);
 
     List<Article> searchByTitleOrContent(String keyword);
+
+    // 新增：根据关键词搜索文章且排除指定作者
+    List<Article> searchByTitleOrContentExcludeAuthor(String keyword, Integer id);
 
     List<Article> getArticlesByAuthorId(Integer authorId);
 
@@ -42,4 +48,10 @@ public interface ArticleService {
 
     // 新增方法：将指定文章的 is_banned 设置为 0（解封文章）
     void unbanArticle(Integer articleId);
+
+    // 新增方法：删除文章
+    void deleteArticle(Integer article_id);
+
+    // 根据关键词搜索文章标题或内容，可选排除指定作者的文章
+    List<Article> searchByTitleOrContentWithFilter(String keyword, Integer excludeAuthorId);
 }

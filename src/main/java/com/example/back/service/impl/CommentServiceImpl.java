@@ -88,6 +88,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public boolean deleteComment(Integer comment_id) {
+        if (comment_id == null) {
+            return false;
+        }
+        int result = commentMapper.deleteComment(comment_id);
+        return result > 0;
+    }
+
+    @Override
     public Object getCommentById(Integer id) {
         return commentMapper.getCommentById(id);
     }

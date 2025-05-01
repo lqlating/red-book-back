@@ -14,4 +14,9 @@
         INNER JOIN comment c ON u.id = c.user_id
         WHERE c.comment_id = #{commentId}
     </select>
+    
+    <!-- 删除评论 -->
+    <delete id="deleteComment">
+        DELETE FROM comment WHERE comment_id = #{comment_id}
+    </delete>
 </mapper> 

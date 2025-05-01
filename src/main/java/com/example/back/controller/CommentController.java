@@ -234,4 +234,29 @@ public class CommentController {
             return Result.error("Failed to ban comment");
         }
     }
+    
+    // 新增接口：删除评论
+    @Operation(summary = "删除评论", description = "根据评论ID删除指定评论")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "评论删除成功",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Result.class)) }),
+            @ApiResponse(responseCode = "400", description = "评论删除失败",
+                    content = @Content)
+    })
+    @DeleteMapping("/deleteComment/{comment_id}")
+    public Result deleteComment(@PathVariable Integer comment_id) {
+        try {
+            boolean success = commentService.deleteComment(comment_id);
+            if (success) {
+                // 从report表中删除相关举报数据
+                reportService.deleteReportByContentTypeAndId("comment", comment_id);
+                return Result.success("Comment deleted successfully and related reports removed");
+            } else {
+                return Result.error("Failed to delete comment");
+            }
+        } catch (Exception e) {
+            return Result.error("Error occurred: " + e.getMessage());
+        }
+    }
 }

@@ -43,5 +43,12 @@ public interface CommentService {
      */
     boolean unbanCommentById(Integer commentId);
 
+    /**
+     * 删除评论
+     * @param comment_id 评论ID
+     * @return 成功返回true，失败返回false
+     */
+    boolean deleteComment(Integer comment_id);
+
     Object getCommentById(Integer id);
 }

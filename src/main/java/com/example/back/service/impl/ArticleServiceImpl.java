@@ -20,6 +20,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public List<Article> listExcludeAuthor(String type, Integer id) {
+        return articleMapper.listExcludeAuthor(type, id);
+    }
+
+    @Override
     public void addLike(Integer articleId) {
         articleMapper.addLike(articleId);
     }
@@ -47,6 +52,16 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<Article> searchByTitleOrContent(String keyword) {
         return articleMapper.searchByTitleOrContent(keyword);
+    }
+
+    @Override
+    public List<Article> searchByTitleOrContentExcludeAuthor(String keyword, Integer id) {
+        return articleMapper.searchByTitleOrContentExcludeAuthor(keyword, id);
+    }
+
+    @Override
+    public List<Article> searchByTitleOrContentWithFilter(String keyword, Integer excludeAuthorId) {
+        return articleMapper.searchByTitleOrContentWithFilter(keyword, excludeAuthorId);
     }
 
     @Override
@@ -90,5 +105,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void unbanArticle(Integer articleId) {
         articleMapper.unbanArticle(articleId);
+    }
+
+    // 实现删除文章的方法
+    @Override
+    public void deleteArticle(Integer article_id) {
+        articleMapper.deleteArticle(article_id);
     }
 }

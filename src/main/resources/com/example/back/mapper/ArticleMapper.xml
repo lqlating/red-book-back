@@ -6,4 +6,126 @@
     <select id="getArticleById" resultType="com.example.back.pojo.Article">
         SELECT * FROM article WHERE article_id = #{id}
     </select>
+
+    <select id="findArticleStates" resultType="Integer">
+        select state from article where id = #{id}
+    </select>
+
+    <!-- 根据关键词搜索文章标题或内容 -->
+    <select id="searchByTitleOrContent" resultType="com.example.back.pojo.Article">
+        SELECT * FROM article WHERE title LIKE CONCAT('%',#{keyword},'%') OR content LIKE CONCAT('%',#{keyword},'%')
+    </select>
+    
+    <!-- 根据关键词搜索文章标题或内容，可选排除指定作者的文章 -->
+    <select id="searchByTitleOrContentWithFilter" resultType="com.example.back.pojo.Article">
+        SELECT * FROM article
+        WHERE (title LIKE CONCAT('%', #{param1}, '%') OR content LIKE CONCAT('%', #{param1}, '%'))
+        <if test="param2 != null">
+            AND author_id != #{param2}
+        </if>
+    </select>
+
+    <!-- 获取指定类型的所有文章 -->
+    <select id="list" resultType="com.example.back.pojo.Article">
+        SELECT * FROM article WHERE txt_type = #{type} AND is_review = 1 AND is_banned = 0
+    </select>
+
+    <!-- 获取指定类型的文章，可选排除指定作者的文章 -->
+    <select id="listWithFilter" resultType="com.example.back.pojo.Article">
+        SELECT * FROM article
+        WHERE txt_type = #{type}
+        AND is_review = 1 AND is_banned = 0
+        <if test="id != null">
+            AND author_id != #{id}
+        </if>
+    </select>
+
+    <!-- 增加文章点赞数 -->
+    <update id="addLike">
+        UPDATE article
+        SET like_count = like_count + 1
+        WHERE article_id = #{articleId}
+    </update>
+
+    <!-- 减少文章点赞数 -->
+    <update id="subLike">
+        UPDATE article
+        SET like_count = like_count - 1
+        WHERE article_id = #{articleID}
+    </update>
+
+    <!-- 增加文章收藏数 -->
+    <update id="addStar">
+        UPDATE article
+        SET star_count = star_count + 1
+        WHERE article_id = #{articleID}
+    </update>
+
+    <!-- 减少文章收藏数 -->
+    <update id="subStar">
+        UPDATE article
+        SET star_count = star_count - 1
+        WHERE article_id = #{articleID}
+    </update>
+
+    <!-- 根据ID列表查询文章 -->
+    <select id="selectArticlesByIds" resultType="com.example.back.pojo.Article">
+        SELECT * FROM article WHERE article_id IN
+        <foreach item="articleId" collection="articleIds" open="(" separator="," close=")">
+            #{articleId}
+        </foreach>
+    </select>
+
+    <!-- 根据标题或内容搜索文章，排除指定作者 -->
+    <select id="searchByTitleOrContentExcludeAuthor" resultType="com.example.back.pojo.Article">
+        SELECT * FROM article 
+        WHERE (title LIKE CONCAT('%', #{keyword}, '%') OR content LIKE CONCAT('%', #{keyword}, '%')) 
+        AND author_id != #{id}
+    </select>
+
+    <!-- 根据作者ID查询文章 -->
+    <select id="findArticlesByAuthorId" resultType="com.example.back.pojo.Article">
+        SELECT * FROM article WHERE author_id = #{authorId}
+    </select>
+
+    <!-- 插入新文章 -->
+    <insert id="insert" parameterType="com.example.back.pojo.ArticleRequest">
+        INSERT INTO article (img, img_url, txt_type, content, title, like_count, publication_time, address, star_count, author_id, is_review, is_banned)
+        VALUES (#{imgData}, #{imgUrl}, #{txtType}, #{content}, #{title}, #{likeCount}, #{publicationTime}, #{address}, #{starCount}, #{authorId}, #{isReview}, #{isBanned})
+    </insert>
+
+    <!-- 获取未审核的文章 -->
+    <select id="getUnreviewedArticles" resultType="com.example.back.pojo.Article">
+        SELECT * FROM article WHERE is_review = 0
+    </select>
+
+    <!-- 获取被封禁的文章 -->
+    <select id="getBannedArticles" resultType="com.example.back.pojo.Article">
+        SELECT * FROM article WHERE is_banned = 1
+    </select>
+
+    <!-- 设置文章为已审核并封禁 -->
+    <update id="setReviewedAndBanned">
+        UPDATE article SET is_review = 1, is_banned = 1 WHERE article_id = #{articleId}
+    </update>
+
+    <!-- 设置文章为已审核 -->
+    <update id="setReviewed">
+        UPDATE article SET is_review = 1 WHERE article_id = #{articleId}
+    </update>
+
+    <!-- 解封文章 -->
+    <update id="unbanArticle">
+        UPDATE article SET is_banned = 0 WHERE article_id = #{articleId}
+    </update>
+
+    <!-- 删除文章 -->
+    <delete id="deleteArticle">
+        DELETE FROM article WHERE article_id = #{article_id}
+    </delete>
+
+    <!-- 获取指定类型且作者ID不等于指定ID的文章 -->
+    <select id="listExcludeAuthor" resultType="com.example.back.pojo.Article">
+        SELECT * FROM article WHERE txt_type = #{type} AND is_review = 1 AND is_banned = 0 AND author_id != #{id}
+    </select>
 </mapper> 
