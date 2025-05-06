@@ -165,4 +165,30 @@ public class BookController {
             return Result.error("Failed to unban book: " + e.getMessage());
         }
     }
+
+    @Operation(summary = "获取特定卖家的书籍", description = "根据卖家ID获取所有相关书籍")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "成功获取书籍列表",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Book.class)) }),
+            @ApiResponse(responseCode = "404", description = "没有找到书籍",
+                    content = @Content)
+    })
+    @GetMapping("/seller/{sellerId}")
+    public Result getBooksBySellerId(@PathVariable String sellerId) {
+        List<Book> books = bookService.getBooksBySellerId(sellerId);
+        
+        // 将图片转换为Base64格式
+        for (Book book : books) {
+            if (book.getBook_img() != null) {
+                String book_img_base64 = Base64.getEncoder().encodeToString(book.getBook_img());
+                book.setBook_img_base64(book_img_base64);
+            }
+        }
+        
+        if (books.isEmpty()) {
+            return Result.error("No books found for this seller");
+        }
+        return Result.success(books);
+    }
 }
