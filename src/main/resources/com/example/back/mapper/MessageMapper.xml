@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.back.mapper.MessageMapper">
+
+    <resultMap id="message_result_map" type="com.example.back.pojo.Message">
+        <id property="id" column="id"/>
+        <result property="conversation_id" column="conversation_id"/>
+        <result property="sender_id" column="sender_id"/>
+        <result property="content_text" column="content_text"/>
+        <result property="content_image" column="content_image"/>
+        <result property="message_type" column="message_type"/>
+        <result property="created_at" column="created_at"/>
+        <result property="is_read" column="is_read"/>
+        <association property="sender" javaType="com.example.back.pojo.User">
+            <id property="id" column="sender_id"/>
+            <result property="username" column="username"/>
+            <result property="avatar" column="avatar"/>
+        </association>
+    </resultMap>
+
+    <select id="get_messages_by_conversation_id" resultMap="message_result_map">
+        SELECT m.*, u.username, u.avatar 
+        FROM messages m 
+        LEFT JOIN user_info u ON m.sender_id = u.id 
+        WHERE m.conversation_id = #{conversation_id} 
+        ORDER BY m.created_at ASC 
+        LIMIT #{offset}, #{page_size}
+    </select>
+
+    <insert id="create_message" parameterType="com.example.back.pojo.Message" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO messages (conversation_id, sender_id, content_text, content_image, message_type, created_at, is_read)
+        VALUES (#{conversation_id}, #{sender_id}, #{content_text}, #{content_image}, #{message_type}, #{created_at}, #{is_read})
+    </insert>
+
+    <update id="mark_messages_as_read">
+        UPDATE messages 
+        SET is_read = TRUE 
+        WHERE conversation_id = #{conversation_id} AND sender_id != #{reader_id}
+    </update>
+
+    <select id="get_unread_count" resultType="java.lang.Integer">
+        SELECT COUNT(*) 
+        FROM messages 
+        WHERE conversation_id = #{conversation_id} 
+        AND sender_id != #{user_id} 
+        AND is_read = FALSE
+    </select>
+
+    <select id="get_latest_message" resultMap="message_result_map">
+        SELECT m.*, u.username, u.avatar 
+        FROM messages m 
+        LEFT JOIN user_info u ON m.sender_id = u.id 
+        WHERE m.conversation_id = #{conversation_id} 
+        ORDER BY m.created_at DESC 
+        LIMIT 1
+    </select>
+
+</mapper> 
