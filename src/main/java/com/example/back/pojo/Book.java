@@ -16,8 +16,9 @@ public class Book {
     private String book_type;
     private String book_descripe;
 
-    private Integer is_review;
-    private Integer is_banned;
+    private Integer is_review = 0;  // 默认值为0
+    private Integer is_banned = 0;  // 默认值为0
+    private Integer is_selled = 0;  // 默认值为0，表示未售出
     private Integer book_id;        // 对应数据库中的 book_id
     private String book_img_base64; // 新增字段，用于存储 Base64 格式的图片字符串
 

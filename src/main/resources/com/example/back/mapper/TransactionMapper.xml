@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.back.mapper.TransactionMapper">
+    <!-- 结果映射 -->
+    <resultMap id="TransactionResultMap" type="com.example.back.pojo.Transaction">
+        <id property="transaction_id" column="transaction_id"/>
+        <result property="book_id" column="book_id"/>
+        <result property="seller_id" column="seller_id"/>
+        <result property="buyer_id" column="buyer_id"/>
+        <result property="status" column="status"/>
+        <result property="create_time" column="create_time"/>
+        <result property="update_time" column="update_time"/>
+        <!-- 关联书籍信息 -->
+        <association property="book" javaType="com.example.back.pojo.Book">
+            <id property="book_id" column="book_id"/>
+            <result property="book_title" column="book_title"/>
+            <result property="book_writer" column="book_writer"/>
+            <result property="book_price" column="book_price"/>
+            <result property="book_type" column="book_type"/>
+            <result property="book_descripe" column="book_descripe"/>
+            <result property="book_seller_id" column="book_seller_id"/>
+            <result property="book_img" column="book_img"/>
+        </association>
+    </resultMap>
+
+    <!-- 创建交易 -->
+    <insert id="createTransaction" useGeneratedKeys="true" keyProperty="transaction_id">
+        INSERT INTO `transaction` (book_id, seller_id, buyer_id, status)
+        VALUES (#{book_id}, #{seller_id}, #{buyer_id}, #{status})
+    </insert>
+
+    <!-- 根据ID获取交易 -->
+    <select id="getTransactionById" resultMap="TransactionResultMap">
+        SELECT t.*, b.*
+        FROM `transaction` t
+        LEFT JOIN book b ON t.book_id = b.book_id
+        WHERE t.transaction_id = #{transaction_id}
+    </select>
+
+    <!-- 获取买家的交易记录 -->
+    <select id="getBuyerTransactions" resultMap="TransactionResultMap">
+        SELECT t.*, b.*
+        FROM `transaction` t
+        LEFT JOIN book b ON t.book_id = b.book_id
+        WHERE t.buyer_id = #{buyer_id}
+        ORDER BY t.create_time DESC
+    </select>
+
+    <!-- 获取卖家的交易记录 -->
+    <select id="getSellerTransactions" resultMap="TransactionResultMap">
+        SELECT t.*, b.*
+        FROM `transaction` t
+        LEFT JOIN book b ON t.book_id = b.book_id
+        WHERE t.seller_id = #{seller_id}
+        ORDER BY t.create_time DESC
+    </select>
+
+    <!-- 更新交易状态 -->
+    <update id="updateTransaction">
+        UPDATE `transaction`
+        SET status = #{status}
+        WHERE transaction_id = #{transaction_id}
+    </update>
+
+    <!-- 删除交易 -->
+    <delete id="deleteTransaction">
+        DELETE FROM `transaction`
+        WHERE transaction_id = #{transaction_id}
+    </delete>
+</mapper> 

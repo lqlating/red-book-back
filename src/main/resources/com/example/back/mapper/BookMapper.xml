@@ -7,21 +7,21 @@
 
     <select id="listBooks" resultType="com.example.back.pojo.Book">
         SELECT book_id, book_img, book_seller_id, book_price, book_writer, book_title,
-               book_type, book_descripe, is_review, is_banned
+               book_type, book_descripe, is_review, is_banned, is_selled
         FROM book
-        WHERE is_review = 1 AND is_banned = 0
+        WHERE is_review = 1 AND is_banned = 0 AND (is_selled = 0 OR is_selled IS NULL)
     </select>
 
     <select id="getBookById" resultType="com.example.back.pojo.Book">
         SELECT book_id, book_img, book_seller_id, book_price, book_writer, book_title,
-               book_type, book_descripe, is_review, is_banned
+               book_type, book_descripe, is_review, is_banned, is_selled
         FROM book 
         WHERE book_id = #{book_id} AND is_review = 1 AND is_banned = 0
     </select>
 
     <insert id="addBook">
-        INSERT INTO book (book_title, book_writer, book_img, book_seller_id, book_price, book_type, book_descripe, is_review, is_banned)
-        VALUES (#{book_title}, #{book_writer}, #{book_img}, #{book_seller_id}, #{book_price}, #{book_type}, #{book_descripe}, 0, 0)
+        INSERT INTO book (book_title, book_writer, book_img, book_seller_id, book_price, book_type, book_descripe, is_review, is_banned, is_selled)
+        VALUES (#{book_title}, #{book_writer}, #{book_img}, #{book_seller_id}, #{book_price}, #{book_type}, #{book_descripe}, 0, 0, 0)
     </insert>
 
     <update id="updateBook">
@@ -38,21 +38,32 @@
 
     <select id="getBooksByType" resultType="com.example.back.pojo.Book">
         SELECT * FROM book 
-        WHERE book_type = #{book_type} AND is_review = 1 AND is_banned = 0
+        WHERE book_type = #{book_type} AND is_review = 1 AND is_banned = 0 AND (is_selled = 0 OR is_selled IS NULL)
     </select>
 
     <select id="getBooksBySellerId" resultType="com.example.back.pojo.Book">
         SELECT * FROM book 
-        WHERE book_seller_id = #{book_seller_id} AND is_review = 1 AND is_banned = 0
+        WHERE book_seller_id = #{book_seller_id} AND is_banned = 0
     </select>
 
     <select id="getBooksByTitle" resultType="com.example.back.pojo.Book">
         SELECT * FROM book 
-        WHERE book_title LIKE CONCAT('%', #{title}, '%') AND is_review = 1 AND is_banned = 0
+        WHERE book_title LIKE CONCAT('%', #{title}, '%') AND is_review = 1 AND is_banned = 0 AND (is_selled = 0 OR is_selled IS NULL)
     </select>
 
     <select id="getBooksByTitleContaining" resultType="com.example.back.pojo.Book">
         SELECT * FROM book 
-        WHERE book_title LIKE CONCAT('%', #{title}, '%') AND is_review = 1 AND is_banned = 0
+        WHERE book_title LIKE CONCAT('%', #{title}, '%') AND is_review = 1 AND is_banned = 0 AND (is_selled = 0 OR is_selled IS NULL)
     </select>
+
+    <!-- 新增：将多个书籍标记为已售出 -->
+    <update id="markBooksAsSold">
+        UPDATE book 
+        SET is_selled = 1 
+        WHERE book_id IN
+        <foreach item="bookId" collection="bookIds" open="(" separator="," close=")">
+            #{bookId}
+        </foreach>
+    </update>
+
 </mapper>

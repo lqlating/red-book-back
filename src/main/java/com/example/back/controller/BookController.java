@@ -191,4 +191,20 @@ public class BookController {
         }
         return Result.success(books);
     }
+
+    @Operation(summary = "Mark books as sold", description = "Sets is_selled to 1 for the specified book IDs")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Books marked as sold successfully",
+                content = { @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = Result.class)) })
+    })
+    @PutMapping("/markAsSold")
+    public Result markBooksAsSold(@RequestBody List<Integer> bookIds) {
+        try {
+            bookService.markBooksAsSold(bookIds);
+            return Result.success("Books marked as sold successfully");
+        } catch (Exception e) {
+            return Result.error("Failed to mark books as sold: " + e.getMessage());
+        }
+    }
 }

@@ -38,4 +38,7 @@ public interface BookService {
 
     // 新增方法：将指定书籍的 is_review 设置为 1（标记为已审核）
     void setReviewed(Integer book_id);
+
+    // 新增方法：将多个书籍标记为已售出
+    void markBooksAsSold(List<Integer> bookIds);
 }

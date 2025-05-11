@@ -141,6 +141,14 @@ public class BookServiceImpl implements BookService {
         bookMapper.setReviewed(book_id);
     }
 
+    @Override
+    @CacheEvict(value = {"book", "bookList"}, allEntries = true)
+    public void markBooksAsSold(List<Integer> bookIds) {
+        if (bookIds != null && !bookIds.isEmpty()) {
+            bookMapper.markBooksAsSold(bookIds);
+        }
+    }
+
     private void processBookImages(List<Book> books) {
         for (Book book : books) {
             if (book.getBook_img() != null) {

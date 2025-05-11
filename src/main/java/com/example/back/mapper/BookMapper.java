@@ -55,4 +55,7 @@ public interface BookMapper {
     // 新增方法：将指定书籍的 is_review 设置为 1（标记为已审核）
     @Update("UPDATE book SET is_review = 1 WHERE book_id = #{book_id}")
     void setReviewed(@Param("book_id") Integer book_id);
+
+    // 新增方法：将多个书籍标记为已售出
+    void markBooksAsSold(@Param("bookIds") List<Integer> bookIds);
 }
