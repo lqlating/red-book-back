@@ -140,6 +140,20 @@ public class BookController {
         return Result.success(books);
     }
 
+    @Operation(summary = "Set book as reviewed", description = "Sets the is_review field of the specified book to 1")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Book marked as reviewed successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Book.class)) }),
+            @ApiResponse(responseCode = "404", description = "Book not found",
+                    content = @Content)
+    })
+    @PutMapping("/setReviewed/{book_id}")
+    public Result setReviewed(@PathVariable Integer book_id) {
+        bookService.setReviewed(book_id);
+        return Result.success("Book marked as reviewed successfully");
+    }
+
     @Operation(summary = "Unban a book", description = "Sets the is_banned field of the specified book to 0, is_review to 1, and removes related reports")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Book unbanned successfully",

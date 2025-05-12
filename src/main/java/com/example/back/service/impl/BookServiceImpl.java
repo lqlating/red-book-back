@@ -92,7 +92,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Cacheable(value = "bookSearch", key = "'title_' + #title")
     public List<Book> getBooksByTitle(String title) {
         List<Book> books = bookMapper.getBooksByTitle(title);
         processBookImages(books);
@@ -100,7 +99,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Cacheable(value = "bookSearch", key = "'titleContaining_' + #title")
     public List<Book> getBooksByTitleContaining(String title) {
         List<Book> books = bookMapper.getBooksByTitleContaining(title);
         processBookImages(books);

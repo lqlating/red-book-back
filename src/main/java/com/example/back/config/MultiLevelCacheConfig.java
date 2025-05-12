@@ -72,7 +72,6 @@ public class MultiLevelCacheConfig {
                 .withCacheConfiguration("bookList", config.entryTtl(Duration.ofMinutes(5)))
                 .withCacheConfiguration("article", config.entryTtl(Duration.ofMinutes(10)))
                 .withCacheConfiguration("book", config.entryTtl(Duration.ofMinutes(10)))
-                .withCacheConfiguration("articleSearch", config.entryTtl(Duration.ofMinutes(3)))
                 .build();
     }
 } 

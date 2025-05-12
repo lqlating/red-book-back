@@ -5,6 +5,7 @@ import com.example.back.pojo.Result;
 import com.example.back.pojo.User;
 import com.example.back.pojo.UserUpdateRequest;
 import com.example.back.service.UserService;
+import com.example.back.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,9 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ReportService reportService;
 
     @GetMapping("/SearchUserById/{id}")
     public Result search(@PathVariable Integer id) {
@@ -115,8 +119,17 @@ public class UserController {
     // 新增接口：解封用户
     @PostMapping("/unbanUser")
     public Result unbanUser(@RequestParam Integer userId) {
-        userService.unbanUser(userId);
-        return Result.success("User unbanned successfully and ban period cleared");
+        try {
+            // 1. 解封用户
+            userService.unbanUser(userId);
+            
+            // 2. 从report表中删除相关举报数据
+            reportService.deleteReportByContentTypeAndId("user", userId);
+            
+            return Result.success("User unbanned successfully and related reports deleted");
+        } catch (Exception e) {
+            return Result.error("Failed to unban user: " + e.getMessage());
+        }
     }
 
     @PutMapping("/updateUserInfo")
