@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.back.mapper.CommentMapper">
+    <select id="getCommentById" resultType="com.example.back.pojo.Comment">
+        SELECT * FROM comment WHERE comment_id = #{id}
+    </select>
+    
+    <!-- 根据评论ID查找用户 -->
+    <select id="findUserByCommentId" resultType="com.example.back.pojo.User">
+        SELECT DISTINCT u.* 
+        FROM user_info u
+        INNER JOIN comment c ON u.id = c.user_id
+        WHERE c.comment_id = #{commentId}
+    </select>
+    
+    <!-- 删除评论 -->
+    <delete id="deleteComment">
+        DELETE FROM comment WHERE comment_id = #{comment_id}
+    </delete>
+</mapper> 

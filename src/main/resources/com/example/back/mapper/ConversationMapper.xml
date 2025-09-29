@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.back.mapper.ConversationMapper">
+
+    <resultMap id="conversationResultMap" type="com.example.back.pojo.Conversation">
+        <id property="id" column="id"/>
+        <result property="user_low_id" column="user_low_id"/>
+        <result property="user_high_id" column="user_high_id"/>
+        <result property="last_message" column="last_message"/>
+        <result property="last_message_display" column="last_message"/>
+        <result property="last_message_type" column="last_message_type"/>
+        <result property="last_message_time" column="last_message_time"/>
+        <result property="low_unread" column="user_low_unread"/>
+        <result property="high_unread" column="user_high_unread"/>
+    </resultMap>
+
+    <select id="get_conversations_by_user_id" resultMap="conversationResultMap">
+        SELECT * FROM conversations 
+        WHERE user_low_id = #{userId} OR user_high_id = #{userId} 
+        ORDER BY last_message_time DESC
+    </select>
+
+    <select id="get_conversation_by_user_ids" resultMap="conversationResultMap">
+        SELECT * FROM conversations 
+        WHERE user_low_id = #{userLowId} AND user_high_id = #{userHighId}
+    </select>
+
+    <select id="get_conversation_by_id" resultMap="conversationResultMap">
+        SELECT * FROM conversations 
+        WHERE id = #{conversationId}
+    </select>
+
+    <insert id="create_conversation" parameterType="com.example.back.pojo.Conversation" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO conversations (user_low_id, user_high_id, last_message, last_message_type, last_message_time, user_low_unread, user_high_unread)
+        VALUES (#{user_low_id}, #{user_high_id}, #{last_message}, #{last_message_type}, #{last_message_time}, #{low_unread}, #{high_unread})
+    </insert>
+
+    <update id="update_last_message" parameterType="com.example.back.pojo.Conversation">
+        UPDATE conversations 
+        SET last_message = #{last_message},
+            last_message_type = #{last_message_type},
+            last_message_time = #{last_message_time} 
+        WHERE id = #{id}
+    </update>
+
+    <update id="increment_low_unread">
+        UPDATE conversations 
+        SET user_low_unread = user_low_unread + 1 
+        WHERE id = #{conversationId}
+    </update>
+
+    <update id="increment_high_unread">
+        UPDATE conversations 
+        SET user_high_unread = user_high_unread + 1 
+        WHERE id = #{conversationId}
+    </update>
+
+    <update id="clear_low_unread">
+        UPDATE conversations 
+        SET user_low_unread = 0 
+        WHERE id = #{conversationId}
+    </update>
+
+    <update id="clear_high_unread">
+        UPDATE conversations 
+        SET user_high_unread = 0 
+        WHERE id = #{conversationId}
+    </update>
+</mapper>

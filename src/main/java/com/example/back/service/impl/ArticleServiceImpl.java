@@ -1,0 +1,115 @@
+package com.example.back.service.impl;
+
+import com.example.back.mapper.ArticleMapper;
+import com.example.back.pojo.Article;
+import com.example.back.pojo.ArticleRequest;
+import com.example.back.service.ArticleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ArticleServiceImpl implements ArticleService {
+    @Autowired
+    private ArticleMapper articleMapper;
+
+    @Override
+    public List<Article> list(String type, Integer page, Integer size) {
+        return articleMapper.list(type, (page - 1) * size, size);
+    }
+
+    @Override
+    public List<Article> listExcludeAuthor(String type, Integer id, Integer page, Integer size) {
+        return articleMapper.listExcludeAuthor(type, id, (page - 1) * size, size);
+    }
+
+    @Override
+    public void addLike(Integer articleId) {
+        articleMapper.addLike(articleId);
+    }
+
+    @Override
+    public void subLike(Integer articleID) {
+        articleMapper.subLike(articleID);
+    }
+
+    @Override
+    public void addStar(Integer articleID) {
+        articleMapper.addStar(articleID);
+    }
+
+    @Override
+    public void subStar(Integer articleID) {
+        articleMapper.subStar(articleID);
+    }
+
+    @Override
+    public List<Article> getArticlesByIds(List<Integer> articleIds) {
+        return articleMapper.selectArticlesByIds(articleIds);
+    }
+
+    @Override
+    public List<Article> searchByTitleOrContent(String keyword, Integer page, Integer size) {
+        return articleMapper.searchByTitleOrContent(keyword, (page - 1) * size, size);
+    }
+
+    @Override
+    public List<Article> searchByTitleOrContentExcludeAuthor(String keyword, Integer id, Integer page, Integer size) {
+        return articleMapper.searchByTitleOrContentExcludeAuthor(keyword, id, (page - 1) * size, size);
+    }
+
+    @Override
+    public List<Article> searchByTitleOrContentWithFilter(String keyword, Integer excludeAuthorId) {
+        return articleMapper.searchByTitleOrContentWithFilter(keyword, excludeAuthorId);
+    }
+
+    @Override
+    public List<Article> getArticlesByAuthorId(Integer authorId, Integer page, Integer size) {
+        return articleMapper.findArticlesByAuthorId(authorId, (page - 1) * size, size);
+    }
+
+    @Override
+    public List<Article> getUnreviewedArticles(Integer page, Integer size) {
+        return articleMapper.getUnreviewedArticles((page - 1) * size, size);
+    }
+
+    @Override
+    public void save(ArticleRequest article) {
+        articleMapper.insert(article);
+    }
+
+    // 新增方法：获取所有 is_banned 为 1 的文章数据
+    @Override
+    public List<Article> getBannedArticles(Integer page, Integer size) {
+        return articleMapper.getBannedArticles((page - 1) * size, size);
+    }
+
+    // 新增方法：将指定文章的 is_review 和 is_banned 设置为 1
+    @Override
+    public void setReviewedAndBanned(Integer articleId) {
+        articleMapper.setReviewedAndBanned(articleId);
+    }
+
+    @Override
+    public Object getArticleById(Integer id) {
+        return articleMapper.getArticleById(id);
+    }
+
+    @Override
+    public void setReviewed(Integer articleId) {
+        articleMapper.setReviewed(articleId);
+    }
+
+    // 实现解封文章的方法
+    @Override
+    public void unbanArticle(Integer articleId) {
+        articleMapper.unbanArticle(articleId);
+    }
+
+    // 实现删除文章的方法
+    @Override
+    public void deleteArticle(Integer article_id) {
+        articleMapper.deleteArticle(article_id);
+    }
+}
